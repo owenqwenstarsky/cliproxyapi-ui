@@ -4,6 +4,7 @@ import {
   useRef,
   useState,
   type KeyboardEvent as ReactKeyboardEvent,
+  type ReactNode,
   type RefObject,
 } from 'react';
 import { useTranslation } from 'react-i18next';
@@ -62,15 +63,30 @@ function useOutsideDismiss(
   }, [open, containerRef, onClose]);
 }
 
+interface HeaderMenuProps {
+  open: boolean;
+  onOpenChange: (open: boolean) => void;
+  label: string;
+  icon: ReactNode;
+  popoverClassName: string;
+  children: ReactNode;
+}
+
 /**
- * 头部弹出菜单的键盘行为：打开后焦点进入菜单（优先选中项），上下键/Home/End 移动，
- * Escape 或 Tab 离开时关闭，Escape 会把焦点还给触发按钮。
+ * 头部弹出菜单：打开后焦点进入菜单（优先选中项），上下键/Home/End 移动，
+ * Escape 关闭并把焦点还给触发按钮，Tab 离开时关闭。
  */
-function useHeaderMenu() {
-  const [open, setOpen] = useState(false);
+function HeaderMenu({
+  open,
+  onOpenChange,
+  label,
+  icon,
+  popoverClassName,
+  children,
+}: HeaderMenuProps) {
   const containerRef = useRef<HTMLDivElement | null>(null);
   const triggerRef = useRef<HTMLButtonElement | null>(null);
-  const close = useCallback(() => setOpen(false), []);
+  const close = useCallback(() => onOpenChange(false), [onOpenChange]);
 
   useOutsideDismiss(open, containerRef, close);
 
@@ -82,37 +98,73 @@ function useHeaderMenu() {
     (checked ?? items[0]).focus();
   }, [open]);
 
-  const onKeyDown = useCallback((event: ReactKeyboardEvent<HTMLElement>) => {
+  const handleKeyDown = (event: ReactKeyboardEvent<HTMLElement>) => {
     if (event.key === 'Escape') {
       event.preventDefault();
       event.stopPropagation();
-      setOpen(false);
+      onOpenChange(false);
       triggerRef.current?.focus();
       return;
     }
     if (event.key === 'Tab') {
-      setOpen(false);
+      onOpenChange(false);
       return;
     }
-    const keys = ['ArrowDown', 'ArrowUp', 'ArrowRight', 'ArrowLeft', 'Home', 'End'];
-    if (!keys.includes(event.key)) return;
+    if (!MENU_NAV_KEYS.includes(event.key)) return;
+
     const items = Array.from(
       containerRef.current?.querySelectorAll<HTMLElement>('[role="menuitemradio"]') ?? []
     );
     if (!items.length) return;
     event.preventDefault();
+
     const index = items.indexOf(document.activeElement as HTMLElement);
-    let next = index;
+    let next: number;
     if (event.key === 'Home') next = 0;
     else if (event.key === 'End') next = items.length - 1;
-    else if (event.key === 'ArrowDown' || event.key === 'ArrowRight')
+    else if (event.key === 'ArrowDown' || event.key === 'ArrowRight') {
       next = (index + 1) % items.length;
-    else next = (index - 1 + items.length) % items.length;
+    } else next = (index - 1 + items.length) % items.length;
     items[next].focus();
-  }, []);
+  };
 
-  return { open, setOpen, close, containerRef, triggerRef, onKeyDown };
+  // 选中项后由调用方关闭菜单；这里负责把焦点交还触发按钮
+  const handleClick = () => {
+    if (open) triggerRef.current?.focus();
+  };
+
+  return (
+    <div
+      className={`header-menu ${open ? 'open' : ''}`}
+      ref={containerRef}
+      onKeyDown={handleKeyDown}
+      onClick={handleClick}
+    >
+      <Button
+        ref={triggerRef}
+        variant="ghost"
+        size="icon"
+        onClick={(event) => {
+          event.stopPropagation();
+          onOpenChange(!open);
+        }}
+        title={label}
+        aria-label={label}
+        aria-haspopup="menu"
+        aria-expanded={open}
+      >
+        {icon}
+      </Button>
+      {open && (
+        <div className={`header-popover ${popoverClassName}`} role="menu" aria-label={label}>
+          {children}
+        </div>
+      )}
+    </div>
+  );
 }
+
+const MENU_NAV_KEYS = ['ArrowDown', 'ArrowUp', 'ArrowRight', 'ArrowLeft', 'Home', 'End'];
 
 interface TopBarProps {
   headerRef: RefObject<HTMLElement | null>;
@@ -148,20 +200,17 @@ export function TopBar({
   const language = useLanguageStore((state) => state.language);
   const setLanguage = useLanguageStore((state) => state.setLanguage);
 
-  const languageMenu = useHeaderMenu();
-  const themeMenu = useHeaderMenu();
+  const [openMenu, setOpenMenu] = useState<'language' | 'theme' | null>(null);
 
   const handleThemeSelect = (nextTheme: Theme) => {
     setTheme(nextTheme);
-    themeMenu.close();
-    themeMenu.triggerRef.current?.focus();
+    setOpenMenu(null);
   };
 
   const handleLanguageSelect = (nextLanguage: string) => {
     if (!isSupportedLanguage(nextLanguage)) return;
     setLanguage(nextLanguage);
-    languageMenu.close();
-    languageMenu.triggerRef.current?.focus();
+    setOpenMenu(null);
   };
 
   const handleLogout = () => {
@@ -216,131 +265,88 @@ export function TopBar({
           {headerIcons.refresh}
         </Button>
 
-        <div
-          className={`header-menu ${languageMenu.open ? 'open' : ''}`}
-          ref={languageMenu.containerRef}
-          onKeyDown={languageMenu.onKeyDown}
+        <HeaderMenu
+          open={openMenu === 'language'}
+          onOpenChange={(open) => setOpenMenu(open ? 'language' : null)}
+          label={t('language.switch')}
+          icon={headerIcons.language}
+          popoverClassName="language-menu-popover"
         >
-          <Button
-            ref={languageMenu.triggerRef}
-            variant="ghost"
-            size="icon"
-            onClick={() => {
-              themeMenu.close();
-              languageMenu.setOpen((prev) => !prev);
-            }}
-            title={t('language.switch')}
-            aria-label={t('language.switch')}
-            aria-haspopup="menu"
-            aria-expanded={languageMenu.open}
-          >
-            {headerIcons.language}
-          </Button>
-          {languageMenu.open && (
-            <div
-              className="header-popover language-menu-popover"
-              role="menu"
-              aria-label={t('language.switch')}
+          {LANGUAGE_ORDER.map((lang) => (
+            <button
+              key={lang}
+              type="button"
+              className={`language-menu-option ${language === lang ? 'active' : ''}`}
+              onClick={() => handleLanguageSelect(lang)}
+              role="menuitemradio"
+              aria-checked={language === lang}
             >
-              {LANGUAGE_ORDER.map((lang) => (
-                <button
-                  key={lang}
-                  type="button"
-                  className={`language-menu-option ${language === lang ? 'active' : ''}`}
-                  onClick={() => handleLanguageSelect(lang)}
-                  role="menuitemradio"
-                  aria-checked={language === lang}
-                >
-                  <span>{t(LANGUAGE_LABEL_KEYS[lang])}</span>
-                  {language === lang ? (
-                    <span className="language-menu-check" aria-hidden="true">
-                      ✓
-                    </span>
-                  ) : null}
-                </button>
-              ))}
-            </div>
-          )}
-        </div>
+              <span>{t(LANGUAGE_LABEL_KEYS[lang])}</span>
+              {language === lang ? (
+                <span className="language-menu-check" aria-hidden="true">
+                  ✓
+                </span>
+              ) : null}
+            </button>
+          ))}
+        </HeaderMenu>
 
-        <div
-          className={`header-menu ${themeMenu.open ? 'open' : ''}`}
-          ref={themeMenu.containerRef}
-          onKeyDown={themeMenu.onKeyDown}
-        >
-          <Button
-            ref={themeMenu.triggerRef}
-            variant="ghost"
-            size="icon"
-            onClick={() => {
-              languageMenu.close();
-              themeMenu.setOpen((prev) => !prev);
-            }}
-            title={t('theme.switch')}
-            aria-label={t('theme.switch')}
-            aria-haspopup="menu"
-            aria-expanded={themeMenu.open}
-          >
-            {theme === 'auto'
+        <HeaderMenu
+          open={openMenu === 'theme'}
+          onOpenChange={(open) => setOpenMenu(open ? 'theme' : null)}
+          label={t('theme.switch')}
+          icon={
+            theme === 'auto'
               ? headerIcons.autoTheme
               : theme === 'dark'
                 ? headerIcons.moon
                 : theme === 'white'
                   ? headerIcons.whiteTheme
-                  : headerIcons.sun}
-          </Button>
-          {themeMenu.open && (
-            <div
-              className="header-popover theme-menu-popover"
-              role="menu"
-              aria-label={t('theme.switch')}
+                  : headerIcons.sun
+          }
+          popoverClassName="theme-menu-popover"
+        >
+          {THEME_CARDS.map((tc) => (
+            <button
+              key={tc.key}
+              type="button"
+              className={`theme-card ${theme === tc.key ? 'active' : ''}`}
+              onClick={() => handleThemeSelect(tc.key)}
+              role="menuitemradio"
+              aria-checked={theme === tc.key}
             >
-              {THEME_CARDS.map((tc) => (
-                <button
-                  key={tc.key}
-                  type="button"
-                  className={`theme-card ${theme === tc.key ? 'active' : ''}`}
-                  onClick={() => handleThemeSelect(tc.key)}
-                  role="menuitemradio"
-                  aria-checked={theme === tc.key}
-                >
+              <div
+                className="theme-card-preview"
+                style={{ background: tc.colors.bg, border: `1px solid ${tc.colors.border}` }}
+              >
+                <div
+                  className="theme-card-header"
+                  style={{
+                    background: tc.colors.card,
+                    borderBottom: `1px solid ${tc.colors.border}`,
+                  }}
+                />
+                <div className="theme-card-body">
                   <div
-                    className="theme-card-preview"
-                    style={{ background: tc.colors.bg, border: `1px solid ${tc.colors.border}` }}
-                  >
+                    className="theme-card-sidebar"
+                    style={{
+                      background: tc.colors.card,
+                      borderRight: `1px solid ${tc.colors.border}`,
+                    }}
+                  />
+                  <div className="theme-card-content" style={{ background: tc.colors.bg }}>
+                    <div className="theme-card-line" style={{ background: tc.colors.textMuted }} />
                     <div
-                      className="theme-card-header"
-                      style={{
-                        background: tc.colors.card,
-                        borderBottom: `1px solid ${tc.colors.border}`,
-                      }}
+                      className="theme-card-line short"
+                      style={{ background: tc.colors.textMuted }}
                     />
-                    <div className="theme-card-body">
-                      <div
-                        className="theme-card-sidebar"
-                        style={{
-                          background: tc.colors.card,
-                          borderRight: `1px solid ${tc.colors.border}`,
-                        }}
-                      />
-                      <div className="theme-card-content" style={{ background: tc.colors.bg }}>
-                        <div
-                          className="theme-card-line"
-                          style={{ background: tc.colors.textMuted }}
-                        />
-                        <div
-                          className="theme-card-line short"
-                          style={{ background: tc.colors.textMuted }}
-                        />
-                      </div>
-                    </div>
                   </div>
-                  <span className="theme-card-label">{t(tc.labelKey)}</span>
-                </button>
-              ))}
-            </div>
-          )}
-        </div>
+                </div>
+              </div>
+              <span className="theme-card-label">{t(tc.labelKey)}</span>
+            </button>
+          ))}
+        </HeaderMenu>
 
         <Button
           variant="ghost"

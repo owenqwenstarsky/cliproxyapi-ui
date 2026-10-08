@@ -3,7 +3,7 @@ import { useTranslation } from 'react-i18next';
 import { Sheet } from '@/components/ui/Sheet';
 import { IconLoader2, IconPencil } from '@/components/ui/icons';
 import type { ProviderRecentUsageMap } from '@/components/providers/utils';
-import { useNotificationStore } from '@/stores';
+import { useConfirmDiscard } from '@/hooks/useConfirmDiscard';
 import { PROVIDER_DESCRIPTORS } from '../descriptors';
 import { isMultiProtocolSponsorBrand } from '../sponsorDefinitions';
 import type { ProviderBrand, ProviderEntryFormInput, ProviderResource } from '../types';
@@ -50,7 +50,6 @@ export function ProviderSheet({
   ref,
 }: ProviderSheetProps) {
   const { t } = useTranslation();
-  const { showConfirmation } = useNotificationStore();
   const formId = useId();
   const [submitting, setSubmitting] = useState(false);
   const [isDirty, setIsDirty] = useState(false);
@@ -71,22 +70,8 @@ export function ProviderSheet({
   const formMutating = submitting || mutationDisabled;
   const submitDisabled = formMutating || (state.mode === 'edit' && !isDirty);
 
-  const confirmDiscardIfDirty = useCallback((): Promise<boolean> => {
-    if (!isEditingForm || !isDirty || submitting) {
-      return Promise.resolve(true);
-    }
-    return new Promise<boolean>((resolve) => {
-      showConfirmation({
-        title: t('providersPage.unsavedChanges.title'),
-        message: t('providersPage.unsavedChanges.message'),
-        variant: 'danger',
-        confirmText: t('providersPage.unsavedChanges.discard'),
-        cancelText: t('providersPage.unsavedChanges.keepEditing'),
-        onConfirm: () => resolve(true),
-        onCancel: () => resolve(false),
-      });
-    });
-  }, [isDirty, isEditingForm, showConfirmation, submitting, t]);
+  const confirmDiscard = useConfirmDiscard(isEditingForm && isDirty, submitting);
+  const confirmDiscardIfDirty = confirmDiscard;
 
   useImperativeHandle(ref, () => ({ confirmDiscardIfDirty }), [confirmDiscardIfDirty]);
 

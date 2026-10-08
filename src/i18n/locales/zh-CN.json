@@ -55,7 +55,17 @@
     "invalid_provider_index": "无效的提供商索引。",
     "unsaved_changes_title": "未保存的更改",
     "unsaved_changes_message": "你有未保存的更改，离开后将丢失这些更改。确定要离开吗？",
-    "skip_to_content": "跳到主要内容"
+    "skip_to_content": "跳到主要内容",
+    "clear_search": "清除搜索",
+    "pagination_label": "分页",
+    "pagination_prev": "上一页",
+    "pagination_next": "下一页",
+    "pagination_page": "第 {{page}} 页",
+    "pagination_total": "共 {{count}} 项",
+    "error_boundary_title": "此页面出现了问题",
+    "error_boundary_description": "应用的其他部分仍可正常使用。你可以重试或刷新页面。",
+    "try_again": "重试",
+    "reload_page": "刷新页面"
   },
   "title": {
     "login": "CLI Proxy API Management Center",
@@ -88,7 +98,9 @@
     "error_legacy_backend": "当前后端可使用 v0 管理接口，但不支持 v8。请将 CLIProxyAPI 升级至 v8 或更高版本后再使用此管理页面。",
     "error_server": "后端处理管理接口时发生错误，请查看服务日志",
     "error_cors": "跨域请求被阻止，请检查服务器配置",
-    "error_ssl": "SSL/TLS 证书验证失败"
+    "error_ssl": "SSL/TLS 证书验证失败",
+    "show_key": "显示密钥",
+    "hide_key": "隐藏密钥"
   },
   "header": {
     "refresh_all": "刷新全部",

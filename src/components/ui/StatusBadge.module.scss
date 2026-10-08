@@ -1,0 +1,58 @@
+.badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  max-width: 100%;
+  padding: 2px 9px;
+  border: 1px solid var(--badge-border);
+  border-radius: $radius-full;
+  background: var(--badge-bg);
+  color: var(--badge-text);
+  font-size: var(--font-xs);
+  font-weight: 600;
+  line-height: 1.5;
+  white-space: nowrap;
+}
+
+// 形状图标：不依赖颜色也能区分状态
+.glyph {
+  display: inline-flex;
+  flex: 0 0 auto;
+  align-items: center;
+  justify-content: center;
+  width: 12px;
+  height: 12px;
+  font-size: 11px;
+  font-weight: 800;
+  line-height: 1;
+}
+
+.label {
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.success {
+  --badge-text: var(--success-text);
+  --badge-bg: color-mix(in srgb, var(--success-color) 12%, transparent);
+  --badge-border: color-mix(in srgb, var(--success-color) 40%, transparent);
+}
+
+.warning {
+  --badge-text: var(--warning-text);
+  --badge-bg: var(--warning-bg);
+  --badge-border: var(--warning-border);
+}
+
+.danger {
+  --badge-text: var(--error-color);
+  --badge-bg: color-mix(in srgb, var(--error-color) 12%, transparent);
+  --badge-border: color-mix(in srgb, var(--error-color) 40%, transparent);
+}
+
+.neutral {
+  --badge-text: var(--text-secondary);
+  --badge-bg: var(--bg-tertiary);
+  --badge-border: var(--border-color);
+}

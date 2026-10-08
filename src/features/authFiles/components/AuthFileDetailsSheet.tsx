@@ -6,7 +6,7 @@ import { Button } from '@/components/ui/Button';
 import { LoadingSpinner } from '@/components/ui/LoadingSpinner';
 import { Input } from '@/components/ui/Input';
 import { ToggleSwitch } from '@/components/ui/ToggleSwitch';
-import { useNotificationStore } from '@/stores';
+import { useConfirmDiscard } from '@/hooks/useConfirmDiscard';
 import type {
   PrefixProxyEditorField,
   PrefixProxyEditorFieldValue,
@@ -55,25 +55,10 @@ export function AuthFileDetailsSheet(props: AuthFileDetailsSheetProps) {
   const navigate = useNavigate();
   const { disableControls, editor, updatedText, dirty, onClose, onCopyText, onSave, onChange } =
     props;
-  const showConfirmation = useNotificationStore((state) => state.showConfirmation);
-
-  const confirmClose = useCallback((): boolean | Promise<boolean> => {
-    if (!dirty || editor?.saving === true) return true;
-    return new Promise<boolean>((resolve) => {
-      showConfirmation({
-        title: t('providersPage.unsavedChanges.title'),
-        message: t('providersPage.unsavedChanges.message'),
-        variant: 'danger',
-        confirmText: t('providersPage.unsavedChanges.discard'),
-        cancelText: t('providersPage.unsavedChanges.keepEditing'),
-        onConfirm: () => resolve(true),
-        onCancel: () => resolve(false),
-      });
-    });
-  }, [dirty, editor?.saving, showConfirmation, t]);
+  const confirmClose = useConfirmDiscard(dirty, editor?.saving === true);
 
   const handleCancelClick = useCallback(() => {
-    void Promise.resolve(confirmClose()).then((ok) => {
+    void confirmClose().then((ok) => {
       if (ok) onClose();
     });
   }, [confirmClose, onClose]);
@@ -83,7 +68,7 @@ export function AuthFileDetailsSheet(props: AuthFileDetailsSheetProps) {
       event.preventDefault();
       if (editor?.saving) return;
 
-      void Promise.resolve(confirmClose()).then((ok) => {
+      void confirmClose().then((ok) => {
         if (ok) void navigate('/config?field=routingStrategy');
       });
     },

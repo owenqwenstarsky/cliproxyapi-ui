@@ -14,6 +14,7 @@ import { useTranslation } from 'react-i18next';
 import { TopBar } from './TopBar';
 import { headerIcons } from './headerIcons';
 import { useDialogBehavior } from '@/components/ui/useDialogBehavior';
+import { useDocumentTitle } from '@/hooks/useDocumentTitle';
 import { useLocalStorage } from '@/hooks/useLocalStorage';
 import { useMediaQuery } from '@/hooks/useMediaQuery';
 import { getCredentialHealth } from '@/features/authFiles/health';
@@ -625,7 +626,7 @@ export function MainLayout() {
 
     window.addEventListener('keydown', handleKeyDown);
     return () => window.removeEventListener('keydown', handleKeyDown);
-  }, [hideRailTooltip]);
+  }, [hideRailTooltip, setSidebarCollapsed]);
 
   const renderNavBadge = (badge?: number, badgeLabel?: string, tone?: 'alert') =>
     typeof badge === 'number' ? (
@@ -774,17 +775,17 @@ export function MainLayout() {
   }, [isMobile]);
 
   // 每个路由使用独立的标题，便于浏览器标签页与历史记录区分
-  useEffect(() => {
-    const current = [...navItems]
-      .filter((item) =>
-        item.path === '/'
-          ? location.pathname === '/' || location.pathname === '/dashboard'
-          : location.pathname === item.path || location.pathname.startsWith(`${item.path}/`)
-      )
-      .sort((a, b) => b.path.length - a.path.length)[0];
-    const label = current ? (current.label ?? (current.labelKey ? t(current.labelKey) : '')) : '';
-    document.title = label ? `${label} · ${fullBrandName}` : fullBrandName;
-  }, [location.pathname, navItems, t]);
+  const currentNavItem = [...navItems]
+    .filter((item) =>
+      item.path === '/'
+        ? location.pathname === '/' || location.pathname === '/dashboard'
+        : location.pathname === item.path || location.pathname.startsWith(`${item.path}/`)
+    )
+    .sort((a, b) => b.path.length - a.path.length)[0];
+  const currentNavLabel = currentNavItem
+    ? (currentNavItem.label ?? (currentNavItem.labelKey ? t(currentNavItem.labelKey) : ''))
+    : '';
+  useDocumentTitle(currentNavLabel ? `${currentNavLabel} · ${fullBrandName}` : fullBrandName);
 
   return (
     <div

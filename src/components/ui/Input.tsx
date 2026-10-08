@@ -22,6 +22,8 @@ export function Input({
   id,
   ...rest
 }: InputProps) {
+  const { style: _style, ...restWithoutStyle } = rest;
+  void _style;
   const generatedId = useId();
   const inputId = id ?? generatedId;
   const hintId = hint ? `${inputId}-hint` : undefined;
@@ -38,9 +40,10 @@ export function Input({
         <input
           id={inputId}
           className={`input ${className}`.trim()}
+          style={rightElement ? { paddingRight: 48, ...rest.style } : rest.style}
           aria-invalid={Boolean(error) || rest['aria-invalid']}
           aria-describedby={describedBy}
-          {...rest}
+          {...restWithoutStyle}
         />
         {rightElement && (
           <div
@@ -56,7 +59,7 @@ export function Input({
         </div>
       )}
       {error && (
-        <div id={errorId} className="error-box">
+        <div id={errorId} className="error-box" role="alert">
           {error}
         </div>
       )}

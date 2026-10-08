@@ -132,11 +132,8 @@ export function LoginPage() {
         const autoLoggedIn = await restoreSession();
         if (autoLoggedIn) {
           setAutoLoginSuccess(true);
-          // 延迟跳转，让用户看到成功动画
-          setTimeout(() => {
-            const redirect = (location.state as RedirectState | null)?.from?.pathname || '/';
-            navigate(redirect, { replace: true });
-          }, 1500);
+          const redirect = (location.state as RedirectState | null)?.from?.pathname || '/';
+          navigate(redirect, { replace: true });
         } else {
           setApiBase(storedBase || detectedBase);
           setManagementKey(storedKey || '');
@@ -153,6 +150,7 @@ export function LoginPage() {
   }, []);
 
   const handleSubmit = useCallback(async () => {
+    if (loading) return;
     if (!managementKey.trim()) {
       setError(t('login.error_required'));
       return;
@@ -179,6 +177,7 @@ export function LoginPage() {
   }, [
     apiBase,
     detectedBase,
+    loading,
     login,
     managementKey,
     navigate,
@@ -187,14 +186,12 @@ export function LoginPage() {
     t,
   ]);
 
-  const handleSubmitKeyDown = useCallback(
-    (event: React.KeyboardEvent) => {
-      if (event.key === 'Enter' && !loading) {
-        event.preventDefault();
-        handleSubmit();
-      }
+  const handleFormSubmit = useCallback(
+    (event: React.FormEvent<HTMLFormElement>) => {
+      event.preventDefault();
+      void handleSubmit();
     },
-    [loading, handleSubmit]
+    [handleSubmit]
   );
 
   if (isAuthenticated && !autoLoading && !autoLoginSuccess) {
@@ -235,10 +232,10 @@ export function LoginPage() {
             <img src={INLINE_LOGO_JPEG} alt="Logo" className={styles.logo} />
 
             {/* 登录表单卡片 */}
-            <div className={styles.loginCard}>
+            <form className={styles.loginCard} onSubmit={handleFormSubmit} noValidate>
               <div className={styles.loginHeader}>
                 <div className={styles.titleRow}>
-                  <div className={styles.title}>{t('title.login')}</div>
+                  <h1 className={styles.title}>{t('title.login')}</h1>
                   <Select
                     className={styles.languageSelect}
                     value={language}
@@ -286,22 +283,14 @@ export function LoginPage() {
                 autoComplete="current-password"
                 value={managementKey}
                 onChange={(e) => setManagementKey(e.target.value)}
-                onKeyDown={handleSubmitKeyDown}
                 rightElement={
                   <button
                     type="button"
                     className="btn btn-ghost btn-sm"
                     onClick={() => setShowKey((prev) => !prev)}
-                    aria-label={
-                      showKey
-                        ? t('login.hide_key', { defaultValue: '隐藏密钥' })
-                        : t('login.show_key', { defaultValue: '显示密钥' })
-                    }
-                    title={
-                      showKey
-                        ? t('login.hide_key', { defaultValue: '隐藏密钥' })
-                        : t('login.show_key', { defaultValue: '显示密钥' })
-                    }
+                    aria-label={showKey ? t('login.hide_key') : t('login.show_key')}
+                    aria-pressed={showKey}
+                    title={showKey ? t('login.hide_key') : t('login.show_key')}
                   >
                     {showKey ? <IconEyeOff size={16} /> : <IconEye size={16} />}
                   </button>
@@ -318,12 +307,16 @@ export function LoginPage() {
                 />
               </div>
 
-              <Button fullWidth onClick={handleSubmit} loading={loading}>
+              {error && (
+                <div className={styles.errorBox} role="alert">
+                  {error}
+                </div>
+              )}
+
+              <Button type="submit" fullWidth loading={loading}>
                 {loading ? t('login.submitting') : t('login.submit_button')}
               </Button>
-
-              {error && <div className={styles.errorBox}>{error}</div>}
-            </div>
+            </form>
           </div>
         )}
       </div>
