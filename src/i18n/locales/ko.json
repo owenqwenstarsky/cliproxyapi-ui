@@ -982,7 +982,9 @@
     "iflow_oauth_status_error": "인증 실패:",
     "iflow_oauth_start_error": "iFlow OAuth 시작 실패:",
     "iflow_oauth_polling_error": "인증 상태 확인 실패:",
-    "remote_access_disabled": "원격 접속에서는 이 로그인 방식을 사용할 수 없습니다. 로컬(localhost)에서 접속하세요."
+    "remote_access_disabled": "원격 접속에서는 이 로그인 방식을 사용할 수 없습니다. 로컬(localhost)에서 접속하세요.",
+    "credentials_count": "{{count}}개 연결됨",
+    "credentials_problem": "{{count}}개 사용 불가"
   },
   "stats": {
     "success": "성공",

@@ -939,7 +939,9 @@
     "kimi_ai_oauth_status_success": "Xác thực thành công!",
     "kimi_ai_oauth_status_error": "Xác thực thất bại:",
     "kimi_ai_oauth_start_error": "Không thể bắt đầu đăng nhập Kimi quốc tế:",
-    "kimi_ai_oauth_polling_error": "Không thể kiểm tra trạng thái xác thực:"
+    "kimi_ai_oauth_polling_error": "Không thể kiểm tra trạng thái xác thực:",
+    "credentials_count": "Đã kết nối {{count}}",
+    "credentials_problem": "{{count}} không khả dụng"
   },
   "stats": {
     "success": "Thành công",

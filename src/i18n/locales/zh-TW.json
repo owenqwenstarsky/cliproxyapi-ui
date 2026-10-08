@@ -1006,7 +1006,9 @@
     "iflow_cookie_result_expired": "到期時間",
     "iflow_cookie_result_path": "儲存路徑",
     "iflow_cookie_result_type": "類型",
-    "remote_access_disabled": "遠端存取不支援此登入方式，請從本地（localhost）存取"
+    "remote_access_disabled": "遠端存取不支援此登入方式，請從本地（localhost）存取",
+    "credentials_count": "已連接 {{count}} 個",
+    "credentials_problem": "{{count}} 個不可用"
   },
   "stats": {
     "success": "成功",

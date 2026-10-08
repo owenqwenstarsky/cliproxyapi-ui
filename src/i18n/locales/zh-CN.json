@@ -980,7 +980,9 @@
     "iflow_oauth_status_error": "认证失败:",
     "iflow_oauth_start_error": "启动 iFlow OAuth 失败:",
     "iflow_oauth_polling_error": "检查认证状态失败:",
-    "remote_access_disabled": "远程访问不支持此登录方式，请从本地 (localhost) 访问"
+    "remote_access_disabled": "远程访问不支持此登录方式，请从本地 (localhost) 访问",
+    "credentials_count": "已连接 {{count}} 个",
+    "credentials_problem": "{{count}} 个不可用"
   },
   "stats": {
     "success": "成功",

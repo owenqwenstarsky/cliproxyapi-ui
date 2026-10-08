@@ -80,3 +80,28 @@ export const summarizeCredentialHealth = (
   }
   return summary;
 };
+
+export interface ProviderCredentialCount {
+  total: number;
+  problem: number;
+}
+
+/**
+ * 按供应商统计已有凭证数与问题凭证数（OAuth 登录页用它提示“你已经有 N 个了”）。
+ * 供应商键与登录卡片共用同一套归一化。
+ */
+export const countCredentialsByProvider = (
+  files: readonly AuthFileItem[],
+  normalizeKey: (value: string) => string
+): Map<string, ProviderCredentialCount> => {
+  const counts = new Map<string, ProviderCredentialCount>();
+  for (const file of files) {
+    const key = normalizeKey(String(file.type ?? file.provider ?? ''));
+    if (!key) continue;
+    const entry = counts.get(key) ?? { total: 0, problem: 0 };
+    entry.total += 1;
+    if (getCredentialHealth(file).state === 'problem') entry.problem += 1;
+    counts.set(key, entry);
+  }
+  return counts;
+};

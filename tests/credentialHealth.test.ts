@@ -1,5 +1,6 @@
 import { describe, expect, test } from 'bun:test';
 import {
+  countCredentialsByProvider,
   getCredentialHealth,
   isProblemAuthFile,
   summarizeCredentialHealth,
@@ -75,5 +76,32 @@ describe('credential health', () => {
       file({ statusMessage: 'bad' }),
     ]);
     expect(summary).toEqual({ total: 5, healthy: 2, disabled: 1, problem: 2 });
+  });
+});
+
+describe('credential counts by provider', () => {
+  const normalize = (value: string) => value.trim().toLowerCase();
+
+  test('counts totals and problems per provider', () => {
+    const counts = countCredentialsByProvider(
+      [
+        file({ type: 'codex' }),
+        file({ type: 'Codex', unavailable: true }),
+        file({ type: 'claude', disabled: true }),
+        file({ type: '', provider: '' }),
+      ],
+      normalize
+    );
+    expect(counts.get('codex')).toEqual({ total: 2, problem: 1 });
+    expect(counts.get('claude')).toEqual({ total: 1, problem: 0 });
+    expect(counts.has('')).toBe(false);
+  });
+
+  test('falls back to the provider field when type is missing', () => {
+    const counts = countCredentialsByProvider(
+      [file({ type: undefined, provider: 'xai' })],
+      normalize
+    );
+    expect(counts.get('xai')?.total).toBe(1);
   });
 });
