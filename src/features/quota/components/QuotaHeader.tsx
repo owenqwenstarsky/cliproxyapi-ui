@@ -10,6 +10,8 @@ export type QuotaHeaderProps = {
   refreshing: boolean;
   disableControls: boolean;
   onRefreshAll: () => void;
+  /** 点击“N 个需要处理”时切到只看失败的凭证 */
+  onShowAttention: () => void;
 };
 
 /**
@@ -20,8 +22,15 @@ export type QuotaHeaderProps = {
  * （标题 0ms → meta 70ms → 动作 140ms → tabs 210ms）。
  */
 export function QuotaHeader(props: QuotaHeaderProps) {
-  const { totalCount, loadedCount, attentionCount, refreshing, disableControls, onRefreshAll } =
-    props;
+  const {
+    totalCount,
+    loadedCount,
+    attentionCount,
+    refreshing,
+    disableControls,
+    onRefreshAll,
+    onShowAttention,
+  } = props;
   const { t } = useTranslation();
   // 批量结果陆续落地时，「已加载」是页面上唯一滚动的数字
   const displayLoadedCount = useCountUp(loadedCount);
@@ -47,9 +56,9 @@ export function QuotaHeader(props: QuotaHeaderProps) {
               <span className={styles.metaDot} aria-hidden="true">
                 ·
               </span>
-              <span className={styles.metaAttention}>
+              <button type="button" className={styles.metaAttention} onClick={onShowAttention}>
                 {t('quota_management.meta_attention', { count: attentionCount })}
-              </span>
+              </button>
             </>
           )}
         </p>

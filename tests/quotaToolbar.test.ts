@@ -5,16 +5,20 @@ const source = readFileSync('src/features/quota/QuotaPage.tsx', 'utf8');
 const styles = readFileSync('src/features/quota/QuotaPage.module.scss', 'utf8');
 
 describe('quota toolbar presentation contracts', () => {
-  test('uses a named, explicit clear action and restores input focus', () => {
-    expect(source).toContain('type="search"');
+  test('uses the shared search input with a named clear action that restores focus', () => {
+    expect(source).toContain('<SearchInput');
     expect(source).toContain('ref={searchInputRef}');
-    expect(source).toContain('{search && (');
-    expect(source).toContain("aria-label={t('quota_management.search_clear')}");
-    expect(source).toContain(
-      "handleSearchChange('');\n                  searchInputRef.current?.focus();"
+    expect(source).toContain("label={t('quota_management.search_label')}");
+
+    const searchInput = readFileSync(
+      new URL('../src/components/ui/SearchInput.tsx', import.meta.url),
+      'utf8'
     );
-    expect(source).toContain('<IconX size={14} aria-hidden="true" />');
-    expect(styles).toMatch(/&::-webkit-search-cancel-button,[\s\S]*?appearance: none;/);
+    expect(searchInput).toContain('type="search"');
+    expect(searchInput).toContain('{value ? (');
+    expect(searchInput).toContain("aria-label={t('common.clear_search')}");
+    expect(searchInput).toContain("onChange('');");
+    expect(searchInput).toContain('inputRef.current?.focus()');
   });
 
   test('groups search and sorting separately from provider navigation', () => {

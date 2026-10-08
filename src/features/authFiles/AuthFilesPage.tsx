@@ -93,7 +93,7 @@ export function AuthFilesPage() {
     initialUi.statusFilterMode
   );
   const [compactMode, setCompactMode] = useState(initialUi.compactMode);
-  const [search, setSearch] = useState('');
+  const [search, setSearch] = useState(() => searchParams.get('search') ?? '');
   const [page, setPage] = useState(1);
   const [pageSizeByMode, setPageSizeByMode] = useState(initialUi.pageSizeByMode);
   const [pageSizeInput, setPageSizeInput] = useState(() =>

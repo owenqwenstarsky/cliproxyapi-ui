@@ -1644,7 +1644,14 @@
     "weekday_wed": "三",
     "weekday_thu": "四",
     "weekday_fri": "五",
-    "weekday_sat": "六"
+    "weekday_sat": "六",
+    "status_filter_label": "按额度状态筛选",
+    "status_all": "全部",
+    "status_attention": "加载失败",
+    "status_unloaded": "未加载",
+    "status_empty_attention": "没有加载额度失败的凭证",
+    "status_empty_unloaded": "所有凭证的额度都已加载",
+    "open_credential": "在认证文件中打开此凭证"
   },
   "plugin_management": {
     "title": "插件管理",

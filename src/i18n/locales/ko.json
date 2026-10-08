@@ -1646,7 +1646,14 @@
     "weekday_wed": "수",
     "weekday_thu": "목",
     "weekday_fri": "금",
-    "weekday_sat": "토"
+    "weekday_sat": "토",
+    "status_filter_label": "할당량 상태로 필터",
+    "status_all": "전체",
+    "status_attention": "불러오기 실패",
+    "status_unloaded": "미로드",
+    "status_empty_attention": "할당량 불러오기에 실패한 자격 증명이 없습니다",
+    "status_empty_unloaded": "모든 자격 증명의 할당량을 불러왔습니다",
+    "open_credential": "인증 파일에서 이 자격 증명 열기"
   },
   "plugin_management": {
     "title": "플러그인 관리",

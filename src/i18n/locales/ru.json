@@ -1649,7 +1649,14 @@
     "weekday_wed": "Ср",
     "weekday_thu": "Чт",
     "weekday_fri": "Пт",
-    "weekday_sat": "Сб"
+    "weekday_sat": "Сб",
+    "status_filter_label": "Фильтр по состоянию квот",
+    "status_all": "Все",
+    "status_attention": "Ошибка загрузки",
+    "status_unloaded": "Не загружено",
+    "status_empty_attention": "Нет учётных данных с ошибкой загрузки квот",
+    "status_empty_unloaded": "Квоты всех учётных данных загружены",
+    "open_credential": "Открыть в файлах авторизации"
   },
   "plugin_management": {
     "title": "Управление плагинами",

@@ -1670,7 +1670,14 @@
     "weekday_wed": "三",
     "weekday_thu": "四",
     "weekday_fri": "五",
-    "weekday_sat": "六"
+    "weekday_sat": "六",
+    "status_filter_label": "依額度狀態篩選",
+    "status_all": "全部",
+    "status_attention": "載入失敗",
+    "status_unloaded": "未載入",
+    "status_empty_attention": "沒有載入額度失敗的憑證",
+    "status_empty_unloaded": "所有憑證的額度都已載入",
+    "open_credential": "在驗證檔案中開啟此憑證"
   },
   "plugin_management": {
     "title": "插件管理",

@@ -1,4 +1,4 @@
-import { forwardRef, type InputHTMLAttributes } from 'react';
+import { forwardRef, useImperativeHandle, useRef, type InputHTMLAttributes } from 'react';
 import { useTranslation } from 'react-i18next';
 import { IconSearch, IconX } from './icons';
 import styles from './SearchInput.module.scss';
@@ -19,6 +19,9 @@ export const SearchInput = forwardRef<HTMLInputElement, SearchInputProps>(functi
   ref
 ) {
   const { t } = useTranslation();
+  const inputRef = useRef<HTMLInputElement>(null);
+  useImperativeHandle(ref, () => inputRef.current as HTMLInputElement, []);
+
   return (
     <div className={[styles.wrap, wrapClassName].filter(Boolean).join(' ')}>
       <span className={styles.icon} aria-hidden="true">
@@ -26,7 +29,7 @@ export const SearchInput = forwardRef<HTMLInputElement, SearchInputProps>(functi
       </span>
       <input
         {...rest}
-        ref={ref}
+        ref={inputRef}
         type="search"
         className={[styles.input, className].filter(Boolean).join(' ')}
         value={value}
@@ -44,7 +47,11 @@ export const SearchInput = forwardRef<HTMLInputElement, SearchInputProps>(functi
         <button
           type="button"
           className={styles.clear}
-          onClick={() => onChange('')}
+          onClick={() => {
+            onChange('');
+            // 清除后焦点留在输入框里，可以立刻重新输入
+            inputRef.current?.focus();
+          }}
           aria-label={t('common.clear_search')}
           title={t('common.clear_search')}
         >

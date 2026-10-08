@@ -1603,7 +1603,14 @@
     "search_placeholder": "Tìm theo tên file hoặc email",
     "search_empty_title": "Không có tài khoản phù hợp",
     "search_empty_desc": "Hãy thử tên file hoặc email khác, hoặc xóa tìm kiếm.",
-    "search_clear": "Xóa tìm kiếm"
+    "search_clear": "Xóa tìm kiếm",
+    "status_filter_label": "Lọc theo trạng thái quota",
+    "status_all": "Tất cả",
+    "status_attention": "Tải lỗi",
+    "status_unloaded": "Chưa tải",
+    "status_empty_attention": "Không có thông tin xác thực nào tải quota lỗi",
+    "status_empty_unloaded": "Đã tải quota của mọi thông tin xác thực",
+    "open_credential": "Mở thông tin xác thực này trong File xác thực"
   },
   "plugin_management": {
     "title": "Quản lý Plugin",

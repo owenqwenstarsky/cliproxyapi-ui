@@ -10,10 +10,12 @@
 
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
+import { useSearchParams } from 'react-router-dom';
 import { authFilesApi } from '@/services/api';
 import { Button } from '@/components/ui/Button';
 import { EmptyState } from '@/components/ui/EmptyState';
-import { IconSearch, IconX } from '@/components/ui/icons';
+import { Pagination } from '@/components/ui/Pagination';
+import { SearchInput } from '@/components/ui/SearchInput';
 import { Select } from '@/components/ui/Select';
 import { Skeleton } from '@/components/ui/Skeleton';
 import { useHeaderRefresh } from '@/hooks/useHeaderRefresh';
@@ -40,9 +42,12 @@ import {
   classifyQuotaFiles,
   filterEntriesByTab,
   filterEntriesBySearch,
+  filterEntriesByStatus,
+  isQuotaStatusFilter,
   paginate,
   sortQuotaEntries,
   type QuotaFileEntry,
+  type QuotaStatusFilter,
 } from './logic';
 import { nextRecoveryMs } from './resetSchedule';
 import { QUOTA_ADAPTERS, getQuotaSetter, type QuotaCardState } from './providers';
@@ -76,6 +81,12 @@ export function QuotaPage() {
   );
   const [page, setPage] = useState(1);
   const [search, setSearch] = useState('');
+  const [searchParams] = useSearchParams();
+  // 支持 ?status=attention 深链（来自仪表盘 / 页头的“需要处理”入口）
+  const [statusFilter, setStatusFilter] = useState<QuotaStatusFilter>(() => {
+    const requested = searchParams.get('status');
+    return isQuotaStatusFilter(requested) ? requested : 'all';
+  });
   const searchInputRef = useRef<HTMLInputElement>(null);
   // 页头 + tabs 的入场级联（标题 → meta → 动作 → tabs，级差 70ms）
   const revealRef = useRevealGroup<HTMLDivElement>();
@@ -163,9 +174,26 @@ export function QuotaPage() {
 
   const entries = useMemo(() => classifyQuotaFiles(files), [files]);
   const tabCounts = useMemo(() => buildTabCounts(entries), [entries]);
-  const filteredEntries = useMemo(
+  const statusOf = useCallback(
+    (entry: QuotaFileEntry) => quotaByType[entry.type][getQuotaCacheKey(entry.file)]?.status,
+    [quotaByType]
+  );
+  // 状态筛选前的集合：状态分段上的计数以它为基准，切换分段时数字不会跟着跳
+  const scopedEntries = useMemo(
     () => filterEntriesBySearch(filterEntriesByTab(entries, tab), search),
     [entries, tab, search]
+  );
+  const statusCounts = useMemo(
+    () => ({
+      all: scopedEntries.length,
+      attention: filterEntriesByStatus(scopedEntries, 'attention', statusOf).length,
+      unloaded: filterEntriesByStatus(scopedEntries, 'unloaded', statusOf).length,
+    }),
+    [scopedEntries, statusOf]
+  );
+  const filteredEntries = useMemo(
+    () => filterEntriesByStatus(scopedEntries, statusFilter, statusOf),
+    [scopedEntries, statusFilter, statusOf]
   );
   const handleSearchChange = useCallback((value: string) => {
     setSearch(value);
@@ -186,6 +214,11 @@ export function QuotaPage() {
     () => paginate(sortedEntries, page, QUOTA_PAGE_SIZE),
     [sortedEntries, page]
   );
+
+  const handleStatusFilterChange = useCallback((next: QuotaStatusFilter) => {
+    setStatusFilter(next);
+    setPage(1);
+  }, []);
 
   const handleTabChange = useCallback((next: string) => {
     setTab(next as QuotaTabId);
@@ -274,9 +307,18 @@ export function QuotaPage() {
         disableControls
       )
     ) {
-      void loadQuota(pageItems);
+      // 刷新“全部”：覆盖当前筛选下的所有凭证，而不只是可见的这一页（批量加载已限流）
+      void loadQuota(sortedEntries);
     }
-  }, [disableControls, error, filesGeneration, loading, loadQuota, pageItems, sessionGeneration]);
+  }, [
+    disableControls,
+    error,
+    filesGeneration,
+    loading,
+    loadQuota,
+    sortedEntries,
+    sessionGeneration,
+  ]);
 
   useDevinQuotaAutoLoad(
     pageItems,
@@ -321,6 +363,7 @@ export function QuotaPage() {
         refreshing={loading || batchLoading}
         disableControls={disableControls}
         onRefreshAll={handleRefreshAll}
+        onShowAttention={() => handleStatusFilterChange('attention')}
       />
 
       <section className={styles.workbench}>
@@ -337,30 +380,33 @@ export function QuotaPage() {
 
         <div className={styles.toolbar}>
           <div className={styles.search}>
-            <IconSearch size={16} className={styles.searchIcon} aria-hidden="true" />
-            <input
+            <SearchInput
               ref={searchInputRef}
-              className={styles.searchInput}
-              type="search"
               value={search}
-              onChange={(event) => handleSearchChange(event.target.value)}
+              onChange={handleSearchChange}
               placeholder={t('quota_management.search_placeholder')}
-              aria-label={t('quota_management.search_label')}
+              label={t('quota_management.search_label')}
             />
-            {search && (
+          </div>
+          <div
+            className={styles.segmented}
+            role="group"
+            aria-label={t('quota_management.status_filter_label')}
+          >
+            {(['all', 'attention', 'unloaded'] as const).map((value) => (
               <button
+                key={value}
                 type="button"
-                className={styles.clearSearch}
-                aria-label={t('quota_management.search_clear')}
-                title={t('quota_management.search_clear')}
-                onClick={() => {
-                  handleSearchChange('');
-                  searchInputRef.current?.focus();
-                }}
+                className={`${styles.segment} ${statusFilter === value ? styles.segmentActive : ''} ${
+                  value === 'attention' && statusCounts.attention > 0 ? styles.segmentAlert : ''
+                }`}
+                aria-pressed={statusFilter === value}
+                onClick={() => handleStatusFilterChange(value)}
               >
-                <IconX size={14} aria-hidden="true" />
+                {t(`quota_management.status_${value}`)}
+                <span className={styles.segmentCount}>{statusCounts[value]}</span>
               </button>
-            )}
+            ))}
           </div>
           <div className={styles.sort}>
             <Select
@@ -390,21 +436,33 @@ export function QuotaPage() {
             title={
               search.trim()
                 ? t('quota_management.search_empty_title')
-                : tab === 'all'
-                  ? t('quota_management.empty_title')
-                  : t(`${QUOTA_ADAPTERS[tab].i18nPrefix}.empty_title`)
+                : statusFilter !== 'all'
+                  ? t(`quota_management.status_empty_${statusFilter}`)
+                  : tab === 'all'
+                    ? t('quota_management.empty_title')
+                    : t(`${QUOTA_ADAPTERS[tab].i18nPrefix}.empty_title`)
             }
             description={
               search.trim()
                 ? t('quota_management.search_empty_desc')
-                : tab === 'all'
-                  ? t('quota_management.empty_desc')
-                  : t(`${QUOTA_ADAPTERS[tab].i18nPrefix}.empty_desc`)
+                : statusFilter !== 'all'
+                  ? undefined
+                  : tab === 'all'
+                    ? t('quota_management.empty_desc')
+                    : t(`${QUOTA_ADAPTERS[tab].i18nPrefix}.empty_desc`)
             }
             action={
               search.trim() ? (
                 <Button variant="secondary" size="sm" onClick={() => handleSearchChange('')}>
                   {t('quota_management.search_clear')}
+                </Button>
+              ) : statusFilter !== 'all' ? (
+                <Button
+                  variant="secondary"
+                  size="sm"
+                  onClick={() => handleStatusFilterChange('all')}
+                >
+                  {t('quota_management.status_all')}
                 </Button>
               ) : tab === 'all' ? undefined : (
                 <Button variant="secondary" size="sm" onClick={() => handleTabChange('all')}>
@@ -433,29 +491,12 @@ export function QuotaPage() {
 
         {!loading && filteredEntries.length > QUOTA_PAGE_SIZE && (
           <div className={styles.pagination}>
-            <Button
-              variant="secondary"
-              size="sm"
-              onClick={() => setPage(Math.max(1, currentPage - 1))}
-              disabled={currentPage <= 1}
-            >
-              {t('auth_files.pagination_prev')}
-            </Button>
-            <div className={styles.pageInfo}>
-              {t('auth_files.pagination_info', {
-                current: currentPage,
-                total: totalPages,
-                count: filteredEntries.length,
-              })}
-            </div>
-            <Button
-              variant="secondary"
-              size="sm"
-              onClick={() => setPage(Math.min(totalPages, currentPage + 1))}
-              disabled={currentPage >= totalPages}
-            >
-              {t('auth_files.pagination_next')}
-            </Button>
+            <Pagination
+              page={currentPage}
+              pageCount={totalPages}
+              totalItems={filteredEntries.length}
+              onChange={(next) => setPage(Math.min(totalPages, Math.max(1, next)))}
+            />
           </div>
         )}
 

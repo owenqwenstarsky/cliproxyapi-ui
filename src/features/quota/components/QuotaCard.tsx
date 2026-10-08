@@ -9,10 +9,13 @@
 
 import { useState, type CSSProperties } from 'react';
 import { useTranslation } from 'react-i18next';
+import { Link } from 'react-router-dom';
 import { IconRefreshCw } from '@/components/ui/icons';
+import { StatusBadge } from '@/components/ui/StatusBadge';
 import type { ResolvedTheme } from '@/types';
 import { resolveQuotaErrorMessage } from '@/utils/quota';
 import { getQuotaDisplayName } from '@/utils/quota/identity';
+import { deriveAuthFileIdentity } from '@/features/authFiles/identity';
 import {
   getAuthFileIcon,
   getThemeSurfaceIconBackground,
@@ -57,6 +60,9 @@ export function QuotaCard(props: QuotaCardProps) {
   const adapter = QUOTA_ADAPTERS[entry.type];
   const file = entry.file;
   const displayName = getQuotaDisplayName(file);
+  // 与凭证页一致：账号（邮箱 / 项目）领衔，文件名降为悬浮提示；Devin 自带带身份的展示名
+  const identity = deriveAuthFileIdentity(file);
+  const headline = entry.type === 'devin' ? displayName : identity.primary || displayName;
 
   // 挂载时捕获一次延迟：后续 props 变 null 不影响本卡（React 19 禁渲染期读 ref）
   const [mountEntranceDelayMs] = useState<number | null>(entranceDelayMs ?? null);
@@ -108,9 +114,19 @@ export function QuotaCard(props: QuotaCardProps) {
             <span className={styles.iconFallback}>{typeLabel.slice(0, 1).toUpperCase()}</span>
           )}
         </span>
-        <span className={styles.fileName} title={displayName}>
-          {displayName}
-        </span>
+        <Link
+          to={`/auth-files?search=${encodeURIComponent(file.name)}`}
+          className={styles.fileName}
+          title={`${displayName} — ${t('quota_management.open_credential')}`}
+          aria-label={`${t('quota_management.open_credential')}: ${headline}`}
+        >
+          {headline}
+        </Link>
+        {file.disabled === true ? (
+          <StatusBadge tone="neutral" className={styles.disabledBadge}>
+            {t('auth_files.status_disabled')}
+          </StatusBadge>
+        ) : null}
       </header>
 
       <div className={styles.body}>

@@ -1646,7 +1646,14 @@
     "weekday_wed": "Wed",
     "weekday_thu": "Thu",
     "weekday_fri": "Fri",
-    "weekday_sat": "Sat"
+    "weekday_sat": "Sat",
+    "status_filter_label": "Filter by quota status",
+    "status_all": "All",
+    "status_attention": "Failed to load",
+    "status_unloaded": "Not loaded",
+    "status_empty_attention": "No credentials failed to load quota",
+    "status_empty_unloaded": "Every credential's quota has been loaded",
+    "open_credential": "Open this credential in Auth Files"
   },
   "plugin_management": {
     "title": "Plugin Management",
