@@ -43,7 +43,7 @@
   gap: 7px;
   flex-shrink: 0;
   font-family: $font-mono;
-  font-size: 11.5px;
+  font-size: 12px;
   font-variant-numeric: tabular-nums;
   letter-spacing: 0.01em;
 }
@@ -84,7 +84,7 @@
 
 .quotaMessage {
   font-family: $font-mono;
-  font-size: 11.5px;
+  font-size: 12px;
   line-height: 1.5;
   color: var(--text-tertiary);
   text-align: center;
@@ -155,7 +155,7 @@
 
 .antigravityQuotaGroupTitle {
   font-family: $font-mono;
-  font-size: 10px;
+  font-size: 12px;
   font-weight: 700;
   letter-spacing: 0.1em;
   text-transform: uppercase;
@@ -163,7 +163,7 @@
 }
 
 .antigravityQuotaGroupDescription {
-  font-size: 11px;
+  font-size: 12px;
   line-height: 1.4;
   color: var(--text-quaternary);
 }

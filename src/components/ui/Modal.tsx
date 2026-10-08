@@ -10,7 +10,8 @@ import {
 import { createPortal } from 'react-dom';
 import { useTranslation } from 'react-i18next';
 import { IconX } from './icons';
-import { FOCUSABLE_SELECTOR, lockScroll, unlockScroll } from './scrollLock';
+import { lockScroll, unlockScroll } from './scrollLock';
+import { useDialogBehavior } from './useDialogBehavior';
 
 interface ModalProps {
   open: boolean;
@@ -22,7 +23,7 @@ interface ModalProps {
   closeDisabled?: boolean;
 }
 
-const CLOSE_ANIMATION_DURATION = 350;
+const CLOSE_ANIMATION_DURATION = 160;
 
 export function Modal({
   open,
@@ -41,14 +42,6 @@ export function Modal({
   const closeTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
   const modalRef = useRef<HTMLDivElement | null>(null);
   const closeButtonRef = useRef<HTMLButtonElement | null>(null);
-  const previouslyFocusedRef = useRef<HTMLElement | null>(null);
-
-  const getFocusableElements = useCallback(() => {
-    if (!modalRef.current) return [] as HTMLElement[];
-    return Array.from(modalRef.current.querySelectorAll<HTMLElement>(FOCUSABLE_SELECTOR)).filter(
-      (element) => !element.hasAttribute('disabled') && element.tabIndex !== -1
-    );
-  }, []);
 
   const startClose = useCallback(
     (notifyParent: boolean) => {
@@ -111,69 +104,14 @@ export function Modal({
     return () => unlockScroll();
   }, [shouldLockScroll]);
 
-  useEffect(() => {
-    if (!open) return;
-
-    previouslyFocusedRef.current =
-      document.activeElement instanceof HTMLElement ? document.activeElement : null;
-
-    const focusTimer = window.setTimeout(() => {
-      const firstFocusable = getFocusableElements()[0];
-      (firstFocusable ?? closeButtonRef.current ?? modalRef.current)?.focus();
-    }, 0);
-
-    return () => {
-      window.clearTimeout(focusTimer);
-    };
-  }, [getFocusableElements, open]);
-
-  useEffect(() => {
-    if (open || isVisible) return;
-    previouslyFocusedRef.current?.focus();
-    previouslyFocusedRef.current = null;
-  }, [isVisible, open]);
-
-  useEffect(() => {
-    if (!open) return;
-
-    const handleKeyDown = (event: KeyboardEvent) => {
-      if (event.key === 'Escape') {
-        if (closeDisabled) return;
-        event.preventDefault();
-        handleClose();
-        return;
-      }
-
-      if (event.key !== 'Tab') return;
-
-      const focusableElements = getFocusableElements();
-      if (focusableElements.length === 0) {
-        event.preventDefault();
-        modalRef.current?.focus();
-        return;
-      }
-
-      const firstElement = focusableElements[0];
-      const lastElement = focusableElements[focusableElements.length - 1];
-      const activeElement = document.activeElement as HTMLElement | null;
-
-      if (event.shiftKey) {
-        if (activeElement === firstElement || activeElement === modalRef.current) {
-          event.preventDefault();
-          lastElement.focus();
-        }
-        return;
-      }
-
-      if (activeElement === lastElement) {
-        event.preventDefault();
-        firstElement.focus();
-      }
-    };
-
-    document.addEventListener('keydown', handleKeyDown);
-    return () => document.removeEventListener('keydown', handleKeyDown);
-  }, [closeDisabled, getFocusableElements, handleClose, open]);
+  useDialogBehavior({
+    open,
+    visible: isVisible,
+    containerRef: modalRef,
+    closeButtonRef,
+    closeDisabled,
+    onRequestClose: handleClose,
+  });
 
   if (!open && !isVisible) return null;
 
@@ -202,9 +140,9 @@ export function Modal({
           <IconX size={20} />
         </button>
         <div className="modal-header">
-          <div className="modal-title" id={title ? titleId : undefined}>
+          <h2 className="modal-title" id={title ? titleId : undefined}>
             {title}
-          </div>
+          </h2>
         </div>
         <div className="modal-body">{children}</div>
         {footer && <div className="modal-footer">{footer}</div>}

@@ -26,7 +26,7 @@ const getSystemTheme = (): ResolvedTheme => {
 };
 
 const resolveAutoTheme = (): AppliedTheme => {
-  return getSystemTheme() === 'dark' ? 'dark' : 'white';
+  return getSystemTheme();
 };
 
 const normalizeResolvedTheme = (theme: AppliedTheme): ResolvedTheme => {

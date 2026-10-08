@@ -54,3 +54,6 @@ export const SUPPORTED_LANGUAGES = LANGUAGE_ORDER;
 
 // 通知持续时间
 export const NOTIFICATION_DURATION_MS = 3000;
+// 错误提示承载失败原因，需要足够的阅读时间（悬停/聚焦时仍会暂停）
+export const NOTIFICATION_ERROR_DURATION_MS = 10000;
+export const NOTIFICATION_MAX_VISIBLE = 4;

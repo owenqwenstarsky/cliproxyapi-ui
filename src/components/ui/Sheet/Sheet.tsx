@@ -10,7 +10,8 @@ import {
 import { createPortal } from 'react-dom';
 import { useTranslation } from 'react-i18next';
 import { IconX } from '../icons';
-import { FOCUSABLE_SELECTOR, lockScroll, unlockScroll } from '../scrollLock';
+import { lockScroll, unlockScroll } from '../scrollLock';
+import { useDialogBehavior } from '../useDialogBehavior';
 import styles from './Sheet.module.scss';
 
 export type SheetSize = 'md' | 'lg' | 'xl';
@@ -64,14 +65,6 @@ export function Sheet({
   const sheetRef = useRef<HTMLDivElement | null>(null);
   const bodyRef = useRef<HTMLDivElement | null>(null);
   const closeBtnRef = useRef<HTMLButtonElement | null>(null);
-  const previouslyFocusedRef = useRef<HTMLElement | null>(null);
-
-  const getFocusableElements = useCallback(() => {
-    if (!sheetRef.current) return [] as HTMLElement[];
-    return Array.from(sheetRef.current.querySelectorAll<HTMLElement>(FOCUSABLE_SELECTOR)).filter(
-      (el) => !el.hasAttribute('disabled') && el.tabIndex !== -1
-    );
-  }, []);
 
   const startClose = useCallback(
     (notifyParent: boolean) => {
@@ -143,57 +136,17 @@ export function Sheet({
   }, [shouldLockScroll]);
 
   useEffect(() => {
-    if (!open) return;
-    previouslyFocusedRef.current =
-      document.activeElement instanceof HTMLElement ? document.activeElement : null;
-    const t = window.setTimeout(() => {
-      if (bodyRef.current) bodyRef.current.scrollTop = 0;
-      const first = getFocusableElements()[0];
-      (first ?? closeBtnRef.current ?? sheetRef.current)?.focus({ preventScroll: true });
-    }, 0);
-    return () => window.clearTimeout(t);
-  }, [getFocusableElements, open]);
+    if (open && bodyRef.current) bodyRef.current.scrollTop = 0;
+  }, [open]);
 
-  useEffect(() => {
-    if (open || isVisible) return;
-    previouslyFocusedRef.current?.focus();
-    previouslyFocusedRef.current = null;
-  }, [isVisible, open]);
-
-  useEffect(() => {
-    if (!open) return;
-    const handleKey = (event: KeyboardEvent) => {
-      if (event.key === 'Escape') {
-        if (closeDisabled) return;
-        event.preventDefault();
-        handleClose();
-        return;
-      }
-      if (event.key !== 'Tab') return;
-      const focusables = getFocusableElements();
-      if (focusables.length === 0) {
-        event.preventDefault();
-        sheetRef.current?.focus();
-        return;
-      }
-      const firstEl = focusables[0];
-      const lastEl = focusables[focusables.length - 1];
-      const active = document.activeElement as HTMLElement | null;
-      if (event.shiftKey) {
-        if (active === firstEl || active === sheetRef.current) {
-          event.preventDefault();
-          lastEl.focus();
-        }
-        return;
-      }
-      if (active === lastEl) {
-        event.preventDefault();
-        firstEl.focus();
-      }
-    };
-    document.addEventListener('keydown', handleKey);
-    return () => document.removeEventListener('keydown', handleKey);
-  }, [closeDisabled, getFocusableElements, handleClose, open]);
+  useDialogBehavior({
+    open,
+    visible: isVisible,
+    containerRef: sheetRef,
+    closeButtonRef: closeBtnRef,
+    closeDisabled,
+    onRequestClose: handleClose,
+  });
 
   if (!open && !isVisible) return null;
 

@@ -12,9 +12,6 @@
 body {
   background-color: var(--bg-secondary);
   color: var(--text-primary);
-  transition:
-    background-color $transition-normal,
-    color $transition-normal;
 }
 
 html.modal-open,
@@ -27,6 +24,10 @@ body.modal-open .content {
 }
 
 // 滚动条样式
+* {
+  scrollbar-color: var(--border-primary) transparent;
+}
+
 ::-webkit-scrollbar {
   width: 8px;
   height: 8px;

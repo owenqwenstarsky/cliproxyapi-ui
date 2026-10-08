@@ -15,7 +15,7 @@
   border-radius: $radius-full;
   color: var(--text-primary);
   font-family: $font-mono;
-  font-size: 11px;
+  font-size: 12px;
   line-height: 1.5;
 }
 
@@ -28,7 +28,7 @@
 .detail {
   flex-shrink: 0;
   color: var(--text-tertiary);
-  font-size: 10px;
+  font-size: 12px;
 }
 
 /* 显式勾选：实线 + primary 染色，读起来是「我选的」。 */

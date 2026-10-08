@@ -7,7 +7,11 @@ import { create } from 'zustand';
 import type { ReactNode } from 'react';
 import type { Notification, NotificationType } from '@/types';
 import { generateId } from '@/utils/helpers';
-import { NOTIFICATION_DURATION_MS } from '@/utils/constants';
+import {
+  NOTIFICATION_DURATION_MS,
+  NOTIFICATION_ERROR_DURATION_MS,
+  NOTIFICATION_MAX_VISIBLE,
+} from '@/utils/constants';
 
 interface ConfirmationOptions {
   title?: string;
@@ -41,18 +45,21 @@ export const useNotificationStore = create<NotificationState>((set) => ({
     options: null,
   },
 
-  showNotification: (message, type = 'info', duration = NOTIFICATION_DURATION_MS) => {
+  showNotification: (message, type = 'info', duration) => {
     const id = generateId();
     const notification: Notification = {
       id,
       message,
       type,
-      duration,
+      duration:
+        duration ?? (type === 'error' ? NOTIFICATION_ERROR_DURATION_MS : NOTIFICATION_DURATION_MS),
     };
 
-    set((state) => ({
-      notifications: [...state.notifications, notification],
-    }));
+    set((state) => {
+      // 相同内容的提示只保留最新一条，避免重复操作时刷屏；总数封顶，丢弃最旧的
+      const rest = state.notifications.filter((n) => !(n.message === message && n.type === type));
+      return { notifications: [...rest, notification].slice(-NOTIFICATION_MAX_VISIBLE) };
+    });
 
     // NotificationContainer owns readable-time expiry and cleans up timers on unmount.
     // Keeping timers out of the store allows hover/focus/hidden-tab pauses.

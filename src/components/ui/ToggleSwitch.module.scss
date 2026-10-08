@@ -26,10 +26,16 @@
 .track {
   width: 44px;
   height: 24px;
-  background: var(--border-color);
+  background: var(--border-control);
   border-radius: $radius-full;
   position: relative;
+  flex: 0 0 auto;
   transition: background $transition-fast;
+}
+
+// 键盘焦点：input 本身不可见，焦点环画在轨道上
+.root input:focus-visible + .track {
+  box-shadow: var(--focus-ring);
 }
 
 .thumb {
@@ -44,8 +50,39 @@
   transition: transform $transition-fast;
 }
 
+// 开启态的对勾：不依赖颜色也能区分开/关
+.thumb::after {
+  content: '';
+  position: absolute;
+  left: 6px;
+  top: 4px;
+  width: 4px;
+  height: 7px;
+  border-right: 2px solid var(--primary-color);
+  border-bottom: 2px solid var(--primary-color);
+  transform: rotate(45deg);
+  opacity: 0;
+  transition: opacity $transition-fast;
+}
+
 .root input:checked + .track {
   background: var(--primary-color);
+}
+
+.root input:checked + .track .thumb::after {
+  opacity: 1;
+}
+
+.root input:disabled + .track {
+  opacity: 0.55;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .track,
+  .thumb,
+  .thumb::after {
+    transition: none;
+  }
 }
 
 .root input:checked + .track .thumb {
@@ -55,4 +92,5 @@
 .label {
   color: var(--text-primary);
   font-weight: 600;
+  font-size: var(--font-md);
 }

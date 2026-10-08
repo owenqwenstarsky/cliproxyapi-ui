@@ -268,7 +268,7 @@
 
 .heroPanelLabel {
   font-family: $font-mono;
-  font-size: 11px;
+  font-size: 12px;
   font-weight: 700;
   letter-spacing: 0.12em;
   text-transform: uppercase;
@@ -284,7 +284,7 @@
   border: 1px solid color-mix(in srgb, var(--viz-success) 35%, transparent);
   background: color-mix(in srgb, var(--viz-success) 8%, transparent);
   font-family: $font-mono;
-  font-size: 10px;
+  font-size: 12px;
   font-weight: 700;
   letter-spacing: 0.14em;
   text-transform: uppercase;
@@ -469,7 +469,7 @@
   align-items: center;
   gap: 7px;
   font-family: $font-mono;
-  font-size: 11px;
+  font-size: 12px;
   font-weight: 700;
   letter-spacing: 0.12em;
   text-transform: uppercase;
@@ -637,7 +637,7 @@
 }
 
 .fleetTotalLabel {
-  font-size: 11px;
+  font-size: 12px;
   color: var(--text-tertiary);
 }
 
@@ -738,7 +738,7 @@
 }
 
 .typeBreakdownLabel {
-  font-size: 11px;
+  font-size: 12px;
   font-weight: 700;
   letter-spacing: 0.14em;
   text-transform: uppercase;

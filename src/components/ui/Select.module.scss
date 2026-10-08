@@ -23,7 +23,7 @@
   background-color: var(--bg-primary);
   box-shadow: var(--shadow);
   color: var(--text-primary);
-  font-size: 13px;
+  font-size: var(--font-sm);
   font-weight: 500;
   cursor: pointer;
   appearance: none;
@@ -34,25 +34,26 @@
     border-color: var(--border-hover);
   }
 
-  &:focus {
+  &:focus-visible {
     outline: none;
+    border-color: var(--focus-color);
     box-shadow:
       var(--shadow),
-      0 0 0 3px rgba($primary-color, 0.18);
+      0 0 0 3px color-mix(in srgb, var(--focus-color) 35%, transparent);
   }
 
   &[aria-expanded='true'] {
-    border-color: var(--primary-color);
+    border-color: var(--focus-color);
     box-shadow:
       var(--shadow),
-      0 0 0 3px rgba($primary-color, 0.18);
+      0 0 0 3px color-mix(in srgb, var(--focus-color) 25%, transparent);
   }
 }
 
 .triggerSm {
-  height: 28px;
+  height: 32px;
   padding: 0 10px;
-  font-size: 12px;
+  font-size: var(--font-xs);
   box-shadow: none;
 }
 
@@ -101,7 +102,7 @@
   color: var(--text-primary);
   cursor: pointer;
   text-align: left;
-  font-size: 13px;
+  font-size: var(--font-sm);
   font-weight: 500;
   transition:
     background-color 0.15s ease,
@@ -114,8 +115,8 @@
 }
 
 .optionActive {
-  border-color: rgba($primary-color, 0.5);
-  background: rgba($primary-color, 0.1);
+  border-color: var(--primary-30);
+  background: var(--primary-10);
   font-weight: 600;
 }
 
