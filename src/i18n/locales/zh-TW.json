@@ -54,7 +54,8 @@
     "model_alias_placeholder": "模型別名（選填）",
     "invalid_provider_index": "無效的供應商索引。",
     "unsaved_changes_title": "未儲存的變更",
-    "unsaved_changes_message": "你有未儲存的變更，離開後將遺失這些變更。確定要離開嗎？"
+    "unsaved_changes_message": "你有未儲存的變更，離開後將遺失這些變更。確定要離開嗎？",
+    "skip_to_content": "跳到主要內容"
   },
   "title": {
     "login": "CLI Proxy API Management Center",
@@ -91,10 +92,17 @@
   },
   "header": {
     "refresh_all": "全部重新整理",
-    "logout": "登出"
+    "logout": "登出",
+    "refreshing": "正在重新整理…",
+    "logout_confirm_title": "確認登出？",
+    "logout_confirm_message": "之後需要重新輸入管理金鑰才能再次連線。"
   },
   "connection": {
-    "status": "連線狀態:"
+    "status": "連線狀態:",
+    "state_connected": "已連線",
+    "state_connecting": "連線中…",
+    "state_disconnected": "未連線",
+    "state_error": "連線錯誤"
   },
   "nav": {
     "dashboard": "儀表板",
@@ -102,12 +110,12 @@
     "ai_providers": "AI 供應商",
     "auth_files": "驗證檔案",
     "oauth": "OAuth 登入",
-    "quota_management": "配額管理",
-    "plugins": "插件管理",
+    "quota_management": "配額",
+    "plugins": "插件",
     "plugin_store": "插件商店",
-    "config_management": "設定面板",
-    "logs": "記錄檢視",
-    "system_info": "中心資訊"
+    "config_management": "設定",
+    "logs": "記錄",
+    "system_info": "系統"
   },
   "nav_groups": {
     "operate": "運行",
@@ -536,7 +544,6 @@
     "reset_confirm_button": "確認重置",
     "reset_not_confirmed": "尚未確認額度重置成功，請重新整理額度後再決定是否重試。",
     "reset_cooldown_failed": "額度已重置，但代理冷卻清除失敗。請在原連線的認證檔案頁面使用「清除冷卻」，不要再次消耗重置卡。",
-
     "reset_success": "已重置「{{name}}」的 Codex 配額",
     "reset_failed": "重置「{{name}}」的 Codex 配額失敗：{{message}}",
     "plan_plus": "Plus",
@@ -1853,7 +1860,9 @@
     "expand": "展開",
     "collapse": "收起",
     "subtitle": "CLI Proxy API 管理控制台",
-    "auth_files_count": "驗證檔案：{{count}} 個"
+    "auth_files_count": "驗證檔案：{{count}} 個",
+    "nav_label": "主導覽",
+    "attention_count": "{{count}} 個憑證需要處理"
   },
   "footer": {
     "api_version": "CLI Proxy API 版本",

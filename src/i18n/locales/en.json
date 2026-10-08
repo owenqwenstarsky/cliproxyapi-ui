@@ -54,7 +54,8 @@
     "model_alias_placeholder": "Model alias (optional)",
     "invalid_provider_index": "Invalid provider index.",
     "unsaved_changes_title": "Unsaved changes",
-    "unsaved_changes_message": "You have unsaved changes. Leaving now will discard them. Do you want to leave?"
+    "unsaved_changes_message": "You have unsaved changes. Leaving now will discard them. Do you want to leave?",
+    "skip_to_content": "Skip to content"
   },
   "title": {
     "login": "CLI Proxy API Management Center",
@@ -91,23 +92,30 @@
   },
   "header": {
     "refresh_all": "Refresh All",
-    "logout": "Logout"
+    "logout": "Logout",
+    "refreshing": "Refreshing…",
+    "logout_confirm_title": "Log out?",
+    "logout_confirm_message": "You will need to enter the management key again to reconnect."
   },
   "connection": {
-    "status": "Connection Status:"
+    "status": "Connection Status:",
+    "state_connected": "Connected",
+    "state_connecting": "Connecting…",
+    "state_disconnected": "Disconnected",
+    "state_error": "Connection error"
   },
   "nav": {
     "dashboard": "Dashboard",
     "quick_start": "Quick Start",
-    "ai_providers": "AI Providers",
+    "ai_providers": "Providers",
     "auth_files": "Auth Files",
-    "oauth": "OAuth Login",
-    "quota_management": "Quota Management",
+    "oauth": "OAuth",
+    "quota_management": "Quota",
     "plugins": "Plugins",
     "plugin_store": "Plugin Store",
-    "config_management": "Config Panel",
-    "logs": "Logs Viewer",
-    "system_info": "Management Center Info"
+    "config_management": "Config",
+    "logs": "Logs",
+    "system_info": "System"
   },
   "nav_groups": {
     "operate": "Operate",
@@ -1828,7 +1836,9 @@
     "expand": "Expand",
     "collapse": "Collapse",
     "subtitle": "CLI Proxy API Console",
-    "auth_files_count": "Authentication files: {{count}}"
+    "auth_files_count": "Authentication files: {{count}}",
+    "nav_label": "Main navigation",
+    "attention_count": "{{count}} credentials need attention"
   },
   "footer": {
     "api_version": "CLI Proxy API Version",

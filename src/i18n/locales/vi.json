@@ -54,7 +54,8 @@
     "model_alias_placeholder": "Bí danh model (tùy chọn)",
     "invalid_provider_index": "Chỉ mục provider không hợp lệ.",
     "unsaved_changes_title": "Thay đổi chưa lưu",
-    "unsaved_changes_message": "Bạn có thay đổi chưa lưu. Rời đi bây giờ sẽ mất các thay đổi đó. Bạn có muốn rời đi không?"
+    "unsaved_changes_message": "Bạn có thay đổi chưa lưu. Rời đi bây giờ sẽ mất các thay đổi đó. Bạn có muốn rời đi không?",
+    "skip_to_content": "Bỏ qua tới nội dung"
   },
   "title": {
     "login": "Trung tâm Quản lý CLI Proxy API",
@@ -91,23 +92,30 @@
   },
   "header": {
     "refresh_all": "Làm mới tất cả",
-    "logout": "Đăng xuất"
+    "logout": "Đăng xuất",
+    "refreshing": "Đang làm mới…",
+    "logout_confirm_title": "Đăng xuất?",
+    "logout_confirm_message": "Bạn sẽ cần nhập lại khóa quản lý để kết nối lại."
   },
   "connection": {
-    "status": "Trạng thái kết nối:"
+    "status": "Trạng thái kết nối:",
+    "state_connected": "Đã kết nối",
+    "state_connecting": "Đang kết nối…",
+    "state_disconnected": "Mất kết nối",
+    "state_error": "Lỗi kết nối"
   },
   "nav": {
     "dashboard": "Bảng điều khiển",
     "quick_start": "Bắt đầu nhanh",
-    "ai_providers": "AI Provider",
+    "ai_providers": "Provider",
     "auth_files": "File xác thực",
-    "oauth": "Đăng nhập OAuth",
-    "quota_management": "Quản lý Quota",
+    "oauth": "OAuth",
+    "quota_management": "Quota",
     "plugins": "Plugin",
     "plugin_store": "Cửa hàng Plugin",
-    "config_management": "Bảng cấu hình",
-    "logs": "Trình xem Log",
-    "system_info": "Thông tin Trung tâm Quản lý"
+    "config_management": "Cấu hình",
+    "logs": "Log",
+    "system_info": "Hệ thống"
   },
   "nav_groups": {
     "operate": "Vận hành",
@@ -1785,7 +1793,9 @@
     "expand": "Mở rộng",
     "collapse": "Thu gọn",
     "subtitle": "Bảng điều khiển CLI Proxy API",
-    "auth_files_count": "File xác thực: {{count}}"
+    "auth_files_count": "File xác thực: {{count}}",
+    "nav_label": "Điều hướng chính",
+    "attention_count": "{{count}} thông tin xác thực cần xử lý"
   },
   "footer": {
     "api_version": "Phiên bản CLI Proxy API",

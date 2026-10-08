@@ -54,7 +54,8 @@
     "model_alias_placeholder": "모델 별칭 (선택 사항)",
     "invalid_provider_index": "유효하지 않은 공급자 인덱스입니다.",
     "unsaved_changes_title": "저장되지 않은 변경 사항",
-    "unsaved_changes_message": "저장되지 않은 변경 사항이 있습니다. 지금 나가면 변경 사항이 삭제됩니다. 나가시겠습니까?"
+    "unsaved_changes_message": "저장되지 않은 변경 사항이 있습니다. 지금 나가면 변경 사항이 삭제됩니다. 나가시겠습니까?",
+    "skip_to_content": "본문으로 건너뛰기"
   },
   "title": {
     "login": "CLI Proxy API 관리 센터",
@@ -91,23 +92,30 @@
   },
   "header": {
     "refresh_all": "모두 새로 고침",
-    "logout": "로그아웃"
+    "logout": "로그아웃",
+    "refreshing": "새로 고침 중…",
+    "logout_confirm_title": "로그아웃할까요?",
+    "logout_confirm_message": "다시 연결하려면 관리 키를 다시 입력해야 합니다."
   },
   "connection": {
-    "status": "연결 상태:"
+    "status": "연결 상태:",
+    "state_connected": "연결됨",
+    "state_connecting": "연결 중…",
+    "state_disconnected": "연결 끊김",
+    "state_error": "연결 오류"
   },
   "nav": {
     "dashboard": "대시보드",
     "quick_start": "빠른 시작",
-    "ai_providers": "AI 공급자",
+    "ai_providers": "공급자",
     "auth_files": "인증 파일",
-    "oauth": "OAuth 로그인",
-    "quota_management": "할당량 관리",
+    "oauth": "OAuth",
+    "quota_management": "할당량",
     "plugins": "플러그인",
     "plugin_store": "플러그인 스토어",
-    "config_management": "설정 패널",
-    "logs": "로그 뷰어",
-    "system_info": "관리 센터 정보"
+    "config_management": "설정",
+    "logs": "로그",
+    "system_info": "시스템"
   },
   "nav_groups": {
     "operate": "운영",
@@ -1828,7 +1836,9 @@
     "expand": "펼치기",
     "collapse": "접기",
     "subtitle": "CLI Proxy API 콘솔",
-    "auth_files_count": "인증 파일: {{count}}개"
+    "auth_files_count": "인증 파일: {{count}}개",
+    "nav_label": "주 메뉴",
+    "attention_count": "확인이 필요한 자격 증명 {{count}}개"
   },
   "footer": {
     "api_version": "CLI Proxy API 버전",

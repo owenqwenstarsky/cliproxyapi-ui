@@ -54,7 +54,8 @@
     "model_alias_placeholder": "Псевдоним модели (необязательно)",
     "invalid_provider_index": "Неверный индекс провайдера.",
     "unsaved_changes_title": "Несохранённые изменения",
-    "unsaved_changes_message": "У вас есть несохранённые изменения. Если вы уйдёте, они будут потеряны. Выйти?"
+    "unsaved_changes_message": "У вас есть несохранённые изменения. Если вы уйдёте, они будут потеряны. Выйти?",
+    "skip_to_content": "Перейти к содержимому"
   },
   "title": {
     "login": "Центр управления CLI Proxy API",
@@ -91,23 +92,30 @@
   },
   "header": {
     "refresh_all": "Обновить всё",
-    "logout": "Выйти"
+    "logout": "Выйти",
+    "refreshing": "Обновление…",
+    "logout_confirm_title": "Выйти?",
+    "logout_confirm_message": "Для повторного подключения потребуется снова ввести ключ управления."
   },
   "connection": {
-    "status": "Статус подключения:"
+    "status": "Статус подключения:",
+    "state_connected": "Подключено",
+    "state_connecting": "Подключение…",
+    "state_disconnected": "Нет подключения",
+    "state_error": "Ошибка подключения"
   },
   "nav": {
     "dashboard": "Панель",
     "quick_start": "Быстрый старт",
-    "ai_providers": "Поставщики AI",
+    "ai_providers": "Поставщики",
     "auth_files": "Файлы аутентификации",
-    "oauth": "OAuth вход",
-    "quota_management": "Управление квотами",
+    "oauth": "OAuth",
+    "quota_management": "Квоты",
     "plugins": "Плагины",
     "plugin_store": "Магазин плагинов",
-    "config_management": "Панель конфигурации",
-    "logs": "Просмотр логов",
-    "system_info": "Информация системы"
+    "config_management": "Конфигурация",
+    "logs": "Логи",
+    "system_info": "Система"
   },
   "nav_groups": {
     "operate": "Работа",
@@ -1822,7 +1830,9 @@
     "expand": "Развернуть",
     "collapse": "Свернуть",
     "subtitle": "Консоль управления CLI Proxy API",
-    "auth_files_count": "Файлов аутентификации: {{count}}"
+    "auth_files_count": "Файлов аутентификации: {{count}}",
+    "nav_label": "Основная навигация",
+    "attention_count": "Требуют внимания: {{count}}"
   },
   "footer": {
     "api_version": "Версия CLI Proxy API",
