@@ -308,7 +308,7 @@ export function SystemPage() {
 
   return (
     <div className={styles.container}>
-      <PageHeader title={t('system_info.title')} />
+      <PageHeader className={styles.pageHeader} title={t('system_info.title')} />
       <div className={styles.content}>
         <Card className={styles.aboutCard}>
           <div className={styles.aboutHeader}>

@@ -141,6 +141,9 @@ const PROVIDERS: BuiltInOAuthProviderCard[] = [
   },
 ];
 
+/** 登录卡片 id → 对应凭证文件的 type（仅列出不一致的） */
+const CREDENTIAL_TYPE_BY_CARD_ID: Record<string, string> = { anthropic: 'claude' };
+
 const BUILTIN_PROVIDER_IDS = new Set<string>(PROVIDERS.map((provider) => provider.id));
 const CALLBACK_SUPPORTED = new Set<string>(['codex', 'anthropic', 'antigravity', 'xai', 'devin']);
 const XAI_CALLBACK_URL = 'http://127.0.0.1:56121/callback';
@@ -367,7 +370,9 @@ export function OAuthPage() {
   );
 
   const renderCredentialCount = (providerId: string) => {
-    const count = credentialCounts.get(normalizeOAuthProviderKey(providerId));
+    // 登录卡片的 id 与凭证文件的 type 并不总是同一个词（Anthropic 登录 → type 为 claude）
+    const credentialKey = CREDENTIAL_TYPE_BY_CARD_ID[providerId] ?? providerId;
+    const count = credentialCounts.get(normalizeOAuthProviderKey(credentialKey));
     if (!count || count.total === 0) return null;
     return (
       <span className={styles.credentialCount}>
