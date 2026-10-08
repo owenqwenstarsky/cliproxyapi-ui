@@ -480,7 +480,17 @@
     "quota_refresh_single": "Refresh quota",
     "quota_refresh_hint": "Refresh quota only for this credential",
     "quota_refresh_success": "Quota refreshed for \"{{name}}\"",
-    "quota_refresh_failed": "Failed to refresh quota for \"{{name}}\": {{message}}"
+    "quota_refresh_failed": "Failed to refresh quota for \"{{name}}\": {{message}}",
+    "select_all_matching": "Select all {{count}}",
+    "status_healthy": "Active",
+    "status_disabled": "Disabled",
+    "status_problem": "Unavailable",
+    "problem_reason_unavailable": "The server marked this credential unavailable and is not routing requests to it.",
+    "problem_reason_error": "This credential reported an error status.",
+    "problem_reason_status_message": "This credential reported a problem.",
+    "settings_title": "Credential settings",
+    "raw_data_label": "Raw file data",
+    "raw_data_hint": "Read-only"
   },
   "antigravity_subscription": {
     "plan_unknown": "Unknown",

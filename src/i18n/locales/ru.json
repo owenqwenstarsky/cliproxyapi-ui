@@ -483,7 +483,17 @@
     "quota_refresh_single": "Обновить квоту",
     "quota_refresh_hint": "Обновить квоту только для этих учётных данных",
     "quota_refresh_success": "Квота для \"{{name}}\" обновлена",
-    "quota_refresh_failed": "Не удалось обновить квоту для \"{{name}}\": {{message}}"
+    "quota_refresh_failed": "Не удалось обновить квоту для \"{{name}}\": {{message}}",
+    "select_all_matching": "Выбрать все ({{count}})",
+    "status_healthy": "Работает",
+    "status_disabled": "Отключено",
+    "status_problem": "Недоступно",
+    "problem_reason_unavailable": "Сервер пометил эти учётные данные недоступными и не направляет на них запросы.",
+    "problem_reason_error": "Эти учётные данные сообщили об ошибке.",
+    "problem_reason_status_message": "Эти учётные данные сообщили о проблеме.",
+    "settings_title": "Настройки учётных данных",
+    "raw_data_label": "Исходные данные файла",
+    "raw_data_hint": "Только чтение"
   },
   "antigravity_subscription": {
     "plan_unknown": "Неизвестно",

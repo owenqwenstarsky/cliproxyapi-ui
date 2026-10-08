@@ -478,7 +478,17 @@
     "quota_refresh_single": "刷新额度",
     "quota_refresh_hint": "仅刷新该认证文件的额度",
     "quota_refresh_success": "已刷新 \"{{name}}\" 的额度",
-    "quota_refresh_failed": "刷新 \"{{name}}\" 的额度失败：{{message}}"
+    "quota_refresh_failed": "刷新 \"{{name}}\" 的额度失败：{{message}}",
+    "select_all_matching": "全选 {{count}} 项",
+    "status_healthy": "正常",
+    "status_disabled": "已停用",
+    "status_problem": "不可用",
+    "problem_reason_unavailable": "服务器已将此凭证标记为不可用，不会再向它路由请求。",
+    "problem_reason_error": "此凭证报告了错误状态。",
+    "problem_reason_status_message": "此凭证报告了问题。",
+    "settings_title": "凭证设置",
+    "raw_data_label": "原始文件数据",
+    "raw_data_hint": "只读"
   },
   "antigravity_subscription": {
     "plan_unknown": "未知",

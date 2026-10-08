@@ -4,6 +4,7 @@ import { useTranslation } from 'react-i18next';
 import { Button } from '@/components/ui/Button';
 import { LoadingSpinner } from '@/components/ui/LoadingSpinner';
 import { SelectionCheckbox } from '@/components/ui/SelectionCheckbox';
+import { StatusBadge } from '@/components/ui/StatusBadge';
 import { ToggleSwitch } from '@/components/ui/ToggleSwitch';
 import {
   IconDownload,
@@ -30,6 +31,7 @@ import {
   type ResolvedTheme,
 } from '@/features/authFiles/constants';
 import { deriveAuthFileIdentity } from '@/features/authFiles/identity';
+import { getCredentialHealth } from '@/features/authFiles/health';
 import { resolveAuthFileQuotaType } from '@/features/authFiles/logic';
 import type { AuthFileStatusBarData } from '@/features/authFiles/hooks/useAuthFilesStatusBarCache';
 import { AuthFileQuotaSection } from '@/features/authFiles/components/AuthFileQuotaSection';
@@ -107,6 +109,8 @@ export function AuthFileCard(props: AuthFileCardProps) {
 
   const rawStatusMessage = getAuthFileStatusMessage(file);
   const hasStatusWarning = hasAuthFileStatusWarning(file);
+  const health = getCredentialHealth(file);
+  const showsStatusMessage = Boolean(rawStatusMessage) && hasStatusWarning;
 
   const priorityValue = Number.isSafeInteger(file.priority) ? file.priority : undefined;
   const weightValue = Number.isSafeInteger(file.weight) ? file.weight : undefined;
@@ -163,6 +167,18 @@ export function AuthFileCard(props: AuthFileCardProps) {
         {isRuntimeOnly && (
           <span className={styles.runtimeLabel}>{t('auth_files.type_virtual')}</span>
         )}
+        <StatusBadge
+          tone={
+            health.state === 'problem'
+              ? 'danger'
+              : health.state === 'disabled'
+                ? 'neutral'
+                : 'success'
+          }
+          className={styles.statusBadge}
+        >
+          {t(`auth_files.status_${health.state}`)}
+        </StatusBadge>
       </header>
 
       {identity.secondary && (
@@ -177,10 +193,18 @@ export function AuthFileCard(props: AuthFileCardProps) {
         </p>
       )}
 
-      {rawStatusMessage && hasStatusWarning && (
+      {showsStatusMessage && (
         <div className={styles.warning} title={rawStatusMessage}>
           <IconInfo className={styles.warningIcon} size={14} />
           <span>{rawStatusMessage}</span>
+        </div>
+      )}
+
+      {/* 进入“问题”筛选的卡片必须说明原因，哪怕后端没给 status_message */}
+      {health.state === 'problem' && !showsStatusMessage && health.reason && (
+        <div className={styles.warning}>
+          <IconInfo className={styles.warningIcon} size={14} />
+          <span>{t(`auth_files.problem_reason_${health.reason}`)}</span>
         </div>
       )}
 
@@ -273,6 +297,7 @@ export function AuthFileCard(props: AuthFileCardProps) {
                   onClick={() => onManualRefresh(file)}
                   className={styles.iconButton}
                   title={t('auth_files.manual_refresh_button')}
+                  aria-label={`${t('auth_files.manual_refresh_button')}: ${identity.primary || file.name}`}
                   disabled={
                     disableControls ||
                     file.disabled ||
@@ -289,6 +314,7 @@ export function AuthFileCard(props: AuthFileCardProps) {
                 onClick={() => onDownload(file.name)}
                 className={styles.iconButton}
                 title={t('auth_files.download_button')}
+                aria-label={`${t('auth_files.download_button')}: ${identity.primary || file.name}`}
                 disabled={disableControls}
               >
                 <IconDownload size={15} />
@@ -298,7 +324,8 @@ export function AuthFileCard(props: AuthFileCardProps) {
                 size="sm"
                 onClick={() => onOpenPrefixProxyEditor(file)}
                 className={styles.iconButton}
-                title={t('auth_files.prefix_proxy_button')}
+                title={t('auth_files.settings_title')}
+                aria-label={`${t('auth_files.settings_title')}: ${identity.primary || file.name}`}
                 disabled={disableControls || isManualRefreshing}
               >
                 <IconSettings size={15} />
@@ -309,6 +336,7 @@ export function AuthFileCard(props: AuthFileCardProps) {
                 onClick={() => onDelete(file.name)}
                 className={styles.iconButton}
                 title={t('auth_files.delete_button')}
+                aria-label={`${t('auth_files.delete_button')}: ${identity.primary || file.name}`}
                 disabled={disableControls || deleting === file.name || isManualRefreshing}
               >
                 {deleting === file.name ? <LoadingSpinner size={14} /> : <IconTrash2 size={15} />}

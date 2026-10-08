@@ -508,3 +508,12 @@
     transform: none;
   }
 }
+
+.statusBadge {
+  margin-left: auto;
+  flex-shrink: 0;
+}
+
+.runtimeLabel + .statusBadge {
+  margin-left: 0;
+}

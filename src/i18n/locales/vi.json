@@ -480,7 +480,17 @@
     "policy_rules_hint": "Các quy tắc tùy chỉnh được ưu tiên theo thứ tự danh sách. Kế thừa hoặc danh sách trống sẽ sử dụng quy tắc kế thừa; điều này không vô hiệu hóa chúng. Mẫu biểu thức chính quy (Regex) dùng cú pháp của Go.",
     "policy_retry_invalid": "Nhập một số nguyên an toàn không âm, hoặc chọn Kế thừa.",
     "policy_aliases_invalid": "Nhập tên model và bí danh không để trống cho mỗi hàng mới hoặc đã chỉnh sửa.",
-    "policy_rules_invalid": "Hoàn thành mỗi quy tắc đã chỉnh sửa với mã trạng thái dương, một hành động và ít nhất một điều kiện khớp không để trống."
+    "policy_rules_invalid": "Hoàn thành mỗi quy tắc đã chỉnh sửa với mã trạng thái dương, một hành động và ít nhất một điều kiện khớp không để trống.",
+    "select_all_matching": "Chọn tất cả {{count}}",
+    "status_healthy": "Hoạt động",
+    "status_disabled": "Đã tắt",
+    "status_problem": "Không khả dụng",
+    "problem_reason_unavailable": "Máy chủ đã đánh dấu thông tin xác thực này là không khả dụng và không định tuyến yêu cầu tới nó.",
+    "problem_reason_error": "Thông tin xác thực này báo trạng thái lỗi.",
+    "problem_reason_status_message": "Thông tin xác thực này báo có sự cố.",
+    "settings_title": "Cài đặt thông tin xác thực",
+    "raw_data_label": "Dữ liệu tệp gốc",
+    "raw_data_hint": "Chỉ đọc"
   },
   "antigravity_subscription": {
     "plan_unknown": "Không rõ",

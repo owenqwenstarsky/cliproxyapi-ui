@@ -478,7 +478,17 @@
     "quota_refresh_single": "重新整理配額",
     "quota_refresh_hint": "僅重新整理該驗證檔案的配額",
     "quota_refresh_success": "已重新整理「{{name}}」的配額",
-    "quota_refresh_failed": "重新整理「{{name}}」的配額失敗：{{message}}"
+    "quota_refresh_failed": "重新整理「{{name}}」的配額失敗：{{message}}",
+    "select_all_matching": "全選 {{count}} 項",
+    "status_healthy": "正常",
+    "status_disabled": "已停用",
+    "status_problem": "不可用",
+    "problem_reason_unavailable": "伺服器已將此憑證標記為不可用，不會再向它路由請求。",
+    "problem_reason_error": "此憑證回報了錯誤狀態。",
+    "problem_reason_status_message": "此憑證回報了問題。",
+    "settings_title": "憑證設定",
+    "raw_data_label": "原始檔案資料",
+    "raw_data_hint": "唯讀"
   },
   "antigravity_subscription": {
     "plan_unknown": "未知",

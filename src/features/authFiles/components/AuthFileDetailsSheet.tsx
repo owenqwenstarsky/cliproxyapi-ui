@@ -4,7 +4,9 @@ import { Trans, useTranslation } from 'react-i18next';
 import { Sheet } from '@/components/ui/Sheet';
 import { Button } from '@/components/ui/Button';
 import { LoadingSpinner } from '@/components/ui/LoadingSpinner';
+import { Collapsible } from '@/components/ui/Collapsible';
 import { Input } from '@/components/ui/Input';
+import { Textarea } from '@/components/ui/Textarea';
 import { ToggleSwitch } from '@/components/ui/ToggleSwitch';
 import { useConfirmDiscard } from '@/hooks/useConfirmDiscard';
 import type {
@@ -110,7 +112,7 @@ export function AuthFileDetailsSheet(props: AuthFileDetailsSheetProps) {
       confirmClose={confirmClose}
       size="md"
       closeDisabled={editor?.saving === true}
-      eyebrow={t('auth_files.prefix_proxy_button')}
+      eyebrow={t('auth_files.settings_title')}
       title={editor?.fileName ?? ''}
       footer={
         <>
@@ -159,22 +161,6 @@ export function AuthFileDetailsSheet(props: AuthFileDetailsSheetProps) {
           ) : (
             <>
               {editor.error && <div className={styles.error}>{editor.error}</div>}
-              <div className={styles.jsonWrapper}>
-                <label className={styles.label}>{t('auth_files.prefix_proxy_info_label')}</label>
-                <textarea className={styles.textarea} rows={8} readOnly value={displayInfoText} />
-              </div>
-              <div className={styles.jsonWrapper}>
-                <label className={styles.label}>
-                  {editor.json
-                    ? t('auth_files.prefix_proxy_source_label')
-                    : t('auth_files.prefix_proxy_invalid_content_label')}
-                </label>
-                {editor.json ? (
-                  <textarea className={styles.textarea} rows={10} readOnly value={previewText} />
-                ) : (
-                  <pre className={styles.invalidPreview}>{invalidContentPreview}</pre>
-                )}
-              </div>
               {editor.json && (
                 <div className={styles.fields}>
                   <Input
@@ -224,35 +210,32 @@ export function AuthFileDetailsSheet(props: AuthFileDetailsSheetProps) {
                     onChange={(e) => onChange('weight', e.target.value)}
                   />
                   <div className="form-group">
-                    <label>{t('auth_files.disable_cooling_label')}</label>
                     <ToggleSwitch
                       checked={editor.disableCooling}
                       onChange={(value) => onChange('disableCooling', value)}
                       disabled={disableControls || editor.saving || !editor.json}
-                      ariaLabel={t('auth_files.disable_cooling_label')}
+                      label={t('auth_files.disable_cooling_label')}
                     />
                     <div className="hint">{t('auth_files.disable_cooling_hint')}</div>
                   </div>
                   {supportsAuthFileWebsockets(editor.providerKey) && (
                     <div className="form-group">
-                      <label>{t('auth_files.websockets_label')}</label>
                       <ToggleSwitch
                         checked={editor.websockets}
                         onChange={(value) => onChange('websockets', value)}
                         disabled={disableControls || editor.saving || !editor.json}
-                        ariaLabel={t('auth_files.websockets_label')}
+                        label={t('auth_files.websockets_label')}
                       />
                       <div className="hint">{t('auth_files.websockets_hint')}</div>
                     </div>
                   )}
                   {supportsAuthFileUsingApi(editor.providerKey) && (
                     <div className="form-group">
-                      <label>{t('auth_files.using_api_label')}</label>
                       <ToggleSwitch
                         checked={editor.usingApi}
                         onChange={(value) => onChange('usingApi', value)}
                         disabled={disableControls || editor.saving || !editor.json}
-                        ariaLabel={t('auth_files.using_api_label')}
+                        label={t('auth_files.using_api_label')}
                       />
                       <div className="hint">{t('auth_files.using_api_hint')}</div>
                     </div>
@@ -263,20 +246,16 @@ export function AuthFileDetailsSheet(props: AuthFileDetailsSheetProps) {
                     disabled={disableControls || editor.saving || !editor.json}
                     onChange={(value) => onChange('excludedModelsText', value)}
                   />
-                  <div className="form-group">
-                    <label>{t('auth_files.headers_label')}</label>
-                    <textarea
-                      className={`input ${editor.headersError ? styles.textareaInvalid : ''}`}
-                      value={editor.headersText}
-                      placeholder={t('auth_files.headers_placeholder')}
-                      rows={4}
-                      aria-invalid={Boolean(editor.headersError)}
-                      disabled={disableControls || editor.saving || !editor.json}
-                      onChange={(e) => onChange('headersText', e.target.value)}
-                    />
-                    {editor.headersError && <div className="error-box">{editor.headersError}</div>}
-                    <div className="hint">{t('auth_files.headers_hint')}</div>
-                  </div>
+                  <Textarea
+                    label={t('auth_files.headers_label')}
+                    value={editor.headersText}
+                    placeholder={t('auth_files.headers_placeholder')}
+                    hint={t('auth_files.headers_hint')}
+                    error={editor.headersError ?? undefined}
+                    rows={4}
+                    disabled={disableControls || editor.saving || !editor.json}
+                    onChange={(e) => onChange('headersText', e.target.value)}
+                  />
                   <AuthFilePolicyFields
                     draft={editor.policy ?? readCredentialPolicy(editor.json)}
                     disabled={disableControls || editor.saving}
@@ -292,6 +271,42 @@ export function AuthFileDetailsSheet(props: AuthFileDetailsSheetProps) {
                   />
                 </div>
               )}
+              <Collapsible
+                label={t('auth_files.raw_data_label')}
+                hint={t('auth_files.raw_data_hint')}
+                defaultOpen={!editor.json}
+              >
+                <div className={styles.jsonWrapper}>
+                  <span className={styles.label} id="auth-file-info-label">
+                    {t('auth_files.prefix_proxy_info_label')}
+                  </span>
+                  <textarea
+                    className={styles.textarea}
+                    rows={8}
+                    readOnly
+                    aria-labelledby="auth-file-info-label"
+                    value={displayInfoText}
+                  />
+                </div>
+                <div className={styles.jsonWrapper}>
+                  <span className={styles.label} id="auth-file-source-label">
+                    {editor.json
+                      ? t('auth_files.prefix_proxy_source_label')
+                      : t('auth_files.prefix_proxy_invalid_content_label')}
+                  </span>
+                  {editor.json ? (
+                    <textarea
+                      className={styles.textarea}
+                      rows={10}
+                      readOnly
+                      aria-labelledby="auth-file-source-label"
+                      value={previewText}
+                    />
+                  ) : (
+                    <pre className={styles.invalidPreview}>{invalidContentPreview}</pre>
+                  )}
+                </div>
+              </Collapsible>
             </>
           )}
         </div>

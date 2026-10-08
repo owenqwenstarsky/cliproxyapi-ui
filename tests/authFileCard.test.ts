@@ -75,8 +75,16 @@ describe('auth file card presentation contract', () => {
     ]) {
       expect(source).toContain(handler);
     }
-    expect(source).toContain('rawStatusMessage && hasStatusWarning');
+    expect(source).toContain('Boolean(rawStatusMessage) && hasStatusWarning');
     expect(source).toContain('showManualRefreshButton');
     expect(source).toContain('file.disabled ||');
+  });
+
+  test('every card states its health, and a problem card always says why', () => {
+    expect(source).toContain('getCredentialHealth(file)');
+    expect(source).toContain('auth_files.status_${health.state}');
+    // 即使后端没有给 status_message，进入“问题”筛选的卡片也必须有原因行
+    expect(source).toContain('auth_files.problem_reason_${health.reason}');
+    expect(source).toContain("health.state === 'problem' && !showsStatusMessage");
   });
 });

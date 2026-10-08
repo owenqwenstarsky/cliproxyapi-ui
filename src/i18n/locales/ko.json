@@ -480,7 +480,17 @@
     "quota_refresh_single": "할당량 새로 고침",
     "quota_refresh_hint": "이 자격 증명의 할당량만 새로 고침합니다",
     "quota_refresh_success": "\"{{name}}\"의 할당량을 새로 고쳤습니다",
-    "quota_refresh_failed": "\"{{name}}\"의 할당량 새로 고침 실패: {{message}}"
+    "quota_refresh_failed": "\"{{name}}\"의 할당량 새로 고침 실패: {{message}}",
+    "select_all_matching": "{{count}}개 모두 선택",
+    "status_healthy": "정상",
+    "status_disabled": "비활성화",
+    "status_problem": "사용 불가",
+    "problem_reason_unavailable": "서버가 이 자격 증명을 사용 불가로 표시했으며 요청을 보내지 않습니다.",
+    "problem_reason_error": "이 자격 증명이 오류 상태를 보고했습니다.",
+    "problem_reason_status_message": "이 자격 증명이 문제를 보고했습니다.",
+    "settings_title": "자격 증명 설정",
+    "raw_data_label": "원본 파일 데이터",
+    "raw_data_hint": "읽기 전용"
   },
   "antigravity_subscription": {
     "plan_unknown": "알 수 없음",
