@@ -62,6 +62,8 @@ export function Sheet({
   const [isVisible, setIsVisible] = useState(false);
   const [isClosing, setIsClosing] = useState(false);
   const closeTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+  // 用户已发起关闭、动画进行中：此时父组件重渲染不得把这次关闭取消掉
+  const userClosingRef = useRef(false);
   const sheetRef = useRef<HTMLDivElement | null>(null);
   const bodyRef = useRef<HTMLDivElement | null>(null);
   const closeBtnRef = useRef<HTMLButtonElement | null>(null);
@@ -69,11 +71,13 @@ export function Sheet({
   const startClose = useCallback(
     (notifyParent: boolean) => {
       if (closeTimerRef.current !== null) return;
+      if (notifyParent) userClosingRef.current = true;
       setIsClosing(true);
       closeTimerRef.current = window.setTimeout(() => {
         setIsVisible(false);
         setIsClosing(false);
         closeTimerRef.current = null;
+        userClosingRef.current = false;
         if (notifyParent) {
           onClose();
         }
@@ -86,6 +90,9 @@ export function Sheet({
     let cancelled = false;
 
     if (open) {
+      // startClose 的身份会随父组件重渲染变化，使本 effect 重跑；关闭动画进行中不能被它打断，
+      // 否则确认框一关（触发重渲染），刚确认放弃的面板又“弹”了回来
+      if (userClosingRef.current) return;
       if (closeTimerRef.current !== null) {
         window.clearTimeout(closeTimerRef.current);
         closeTimerRef.current = null;

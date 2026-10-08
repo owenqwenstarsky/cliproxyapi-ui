@@ -11,7 +11,7 @@ This is a React 19 + TypeScript + Vite management frontend for CLI Proxy API, no
 - `src/stores/`: Zustand state. `src/types/`: shared types. `src/styles/`: global styles and theme tokens.
 - `src/App.tsx`: hash-router setup. `src/router/MainRoutes.tsx`: authenticated route table. `ProtectedRoute` and `MainLayout` guard and wrap the authenticated app.
 - `src/assets/`: bundled assets, including provider icons in `icons/`.
-- `src/i18n/locales/`: `en.json`, `zh-CN.json`, `zh-TW.json`, and `ru.json`; fallback language is `zh-CN`. Update all four files when adding or changing translation keys, including accessible labels.
+- `src/i18n/locales/`: `en.json`, `zh-CN.json`, `zh-TW.json`, `ru.json`, `ko.json`, and `vi.json`; fallback language is `zh-CN`. Update all six files when adding or changing translation keys, including accessible labels. The Korean and Vietnamese suites require the same key set and interpolation tokens as English, so avoid i18next plural suffixes (`_one`/`_other`) and phrase counts neutrally ("Credentials: {{count}}").
 
 ## Build, Test, and Development Commands
 
@@ -48,7 +48,9 @@ Preserve hash routing and single-file deployment. Changes to assets, imports, co
 
 Use 2-space indentation, semicolons, single quotes, ES5 trailing commas, and 100-character line width. Prefer typed React components and `unknown` with narrowing for untrusted data; avoid introducing `any` unless an unavoidable boundary requires it. Use the `@/` alias for `src` imports.
 
-Component files use PascalCase, hooks use `useName`, and API modules use domain names such as `oauth.ts`. SCSS Modules sit beside their page or component as `Name.module.scss`. Vite automatically injects `src/styles/variables.scss` into SCSS; new modules do not need to import it again. Reuse shared components from `src/components/ui/` and existing theme tokens before adding new primitives or hard-coded colors.
+Component files use PascalCase, hooks use `useName`, and API modules use domain names such as `oauth.ts`. SCSS Modules sit beside their page or component as `Name.module.scss`. Vite automatically injects `src/styles/variables.scss` into SCSS; new modules do not need to import it again. Reuse shared components from `src/components/ui/` and existing theme tokens before adding new primitives or hard-coded colors. Current shared primitives include `PageHeader`, `StatusBadge`, `SearchInput`, `Pagination`, `Textarea`, `LastUpdated`, `ErrorBoundary`, and the `Modal`/`Sheet` pair (both use `useDialogBehavior`, so only the topmost dialog handles Escape/Tab); `useConfirmDiscard` guards unsaved edits. Text colors must come from the AA-checked tokens in `src/styles/themes.scss` (`--text-secondary`/`--text-tertiary` for readable text, `--text-quaternary` only for decoration); use `--success-text`/`--error-color`/`--warning-color` for colored text and `--danger-solid` for filled danger buttons. Keep body text at 13px or larger and never remove focus indicators (`:focus-visible` is styled globally with `--focus-color`).
+
+Credential health has one definition: `getCredentialHealth` in `src/features/authFiles/health.ts` (healthy / disabled / problem). Dashboard, credential cards, nav badges and the OAuth page all use it; cooldowns are deliberately not part of health.
 
 Keep user-facing text in i18n. Preserve keyboard interaction, accessible names, focus behavior, and reduced-motion handling when modifying interactive UI.
 
