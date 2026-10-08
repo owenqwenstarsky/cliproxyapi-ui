@@ -4,6 +4,7 @@ import { Button } from '@/components/ui/Button';
 import { Select } from '@/components/ui/Select';
 import type { PayloadFilterRule, PayloadModelEntry } from '@/types/visualConfig';
 import { makeClientId } from '@/types/visualConfig';
+import { useConfirmRuleRemoval } from '../../hooks/useConfirmRuleRemoval';
 import { ExpandableInput } from './ExpandableInput';
 import { StringListEditor } from './StringListEditor';
 import { buildProtocolOptions } from './shared';
@@ -23,7 +24,14 @@ export const PayloadFilterRulesEditor = memo(function PayloadFilterRulesEditor({
   const protocolOptions = useMemo(() => buildProtocolOptions(t, rules), [rules, t]);
 
   const addRule = () => onChange([...rules, { id: makeClientId(), models: [], params: [] }]);
-  const removeRule = (ruleIndex: number) => onChange(rules.filter((_, i) => i !== ruleIndex));
+  const confirmRuleRemoval = useConfirmRuleRemoval();
+  const removeRule = (ruleIndex: number) => {
+    const rule = rules[ruleIndex];
+    const hasContent =
+      rule.models.some((model) => model.name.trim() !== '') ||
+      rule.params.some((param) => param.trim() !== '');
+    confirmRuleRemoval(hasContent, () => onChange(rules.filter((_, i) => i !== ruleIndex)));
+  };
 
   const updateRule = (ruleIndex: number, patch: Partial<PayloadFilterRule>) =>
     onChange(rules.map((rule, i) => (i === ruleIndex ? { ...rule, ...patch } : rule)));

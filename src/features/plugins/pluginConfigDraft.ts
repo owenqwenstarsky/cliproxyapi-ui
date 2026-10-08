@@ -163,3 +163,23 @@ export function buildPluginConfigPatch(
 
   return { patch, errors };
 }
+
+const stableValues = (values: Record<string, PluginDraftValue>) =>
+  Object.keys(values)
+    .sort()
+    .map((key) => [key, values[key]] as const);
+
+/**
+ * 草稿相对打开时是否有实际改动。只比较用户可编辑的值；校验错误、touched 标记都是派生状态，
+ * 不算改动（否则点开再关掉也会弹“放弃修改？”）。
+ */
+export function isPluginConfigDraftDirty(
+  initial: PluginConfigDraft | null,
+  current: PluginConfigDraft | null
+): boolean {
+  if (!initial || !current) return false;
+  return (
+    JSON.stringify([initial.enabled, initial.priority, stableValues(initial.values)]) !==
+    JSON.stringify([current.enabled, current.priority, stableValues(current.values)])
+  );
+}

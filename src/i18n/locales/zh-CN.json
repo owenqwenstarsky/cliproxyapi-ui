@@ -1078,7 +1078,9 @@
     "search_empty_desc": "尝试更换关键字或清空筛选条件。",
     "double_click_copy_hint": "双击复制日志原文",
     "copy_success": "已复制日志原文",
-    "copy_failed": "复制失败"
+    "copy_failed": "复制失败",
+    "live_on": "实时",
+    "live_paused": "已暂停"
   },
   "config_management": {
     "title": "配置面板",
@@ -1597,7 +1599,9 @@
         "delete": "删除",
         "cancel": "取消",
         "update": "更新",
-        "add": "添加"
+        "add": "添加",
+        "remove_rule_title": "删除这条规则？",
+        "remove_rule_message": "该规则及其内部的全部内容（模型、参数、请求头）会从草稿中移除。在保存配置之前不会写入服务器。"
       }
     }
   },
@@ -1846,7 +1850,11 @@
     "clear_login_title": "本地登录信息",
     "clear_login_desc": "清理本地保存的登录信息并退出登录。",
     "clear_login_button": "清理登录信息",
-    "clear_login_confirm": "确认清理本地登录信息并退出登录？"
+    "clear_login_confirm": "确认清理本地登录信息并退出登录？",
+    "models_other": "其他",
+    "models_search_label": "搜索模型",
+    "models_search_placeholder": "按模型名称或别名搜索",
+    "models_no_match": "没有匹配的模型。"
   },
   "notification": {
     "trusted_proxies_restart_required": "可信代理配置已保存，重启后端后生效。",
@@ -2208,7 +2216,12 @@
         "baseUrlRequired": "服务地址必填",
         "weightInteger": "调度权重必须是整数",
         "weightMax": "调度权重不能超过 {{max}}"
-      }
+      },
+      "cloakModeDefault": "服务器默认",
+      "headerName": "请求头名称",
+      "headerValue": "请求头值",
+      "removeHeader": "移除请求头",
+      "removeApiKeyEntry": "移除此 API Key 条目"
     },
     "delete": {
       "title": "删除资源",

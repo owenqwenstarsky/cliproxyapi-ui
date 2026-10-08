@@ -70,7 +70,7 @@ export function useLogStream({ active, isFollowing, onFollow }: LogStreamOptions
   const [loading, setLoading] = useState(true);
   const [clearingLogs, setClearingLogs] = useState(false);
   const [error, setError] = useState('');
-  const [autoRefresh, setAutoRefresh] = useLocalStorage('logsPage.autoRefresh', false);
+  const [autoRefresh, setAutoRefresh] = useLocalStorage('logsPage.autoRefresh', true);
   const autoRefreshRef = useRef(autoRefresh);
   useLayoutEffect(() => {
     autoRefreshRef.current = autoRefresh;

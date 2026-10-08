@@ -1080,7 +1080,9 @@
     "search_empty_desc": "다른 키워드를 시도하거나 필터를 초기화하세요.",
     "double_click_copy_hint": "더블클릭하여 원본 로그 줄을 복사하세요",
     "copy_success": "로그를 클립보드에 복사했습니다",
-    "copy_failed": "복사에 실패했습니다"
+    "copy_failed": "복사에 실패했습니다",
+    "live_on": "실시간",
+    "live_paused": "일시 중지"
   },
   "config_management": {
     "title": "설정 패널",
@@ -1599,7 +1601,9 @@
         "delete": "삭제",
         "cancel": "취소",
         "update": "업데이트",
-        "add": "추가"
+        "add": "추가",
+        "remove_rule_title": "이 규칙을 삭제할까요?",
+        "remove_rule_message": "이 규칙과 그 안의 모든 내용(모델, 매개변수, 헤더)이 초안에서 제거됩니다. 설정을 저장하기 전까지는 서버에 반영되지 않습니다."
       }
     }
   },
@@ -1848,7 +1852,11 @@
     "clear_login_title": "로컬 로그인 데이터",
     "clear_login_desc": "로컬에 저장된 로그인 데이터를 지우고 로그아웃합니다.",
     "clear_login_button": "로그인 데이터 지우기",
-    "clear_login_confirm": "로컬 로그인 데이터를 지우고 지금 로그아웃하시겠습니까?"
+    "clear_login_confirm": "로컬 로그인 데이터를 지우고 지금 로그아웃하시겠습니까?",
+    "models_other": "기타",
+    "models_search_label": "모델 검색",
+    "models_search_placeholder": "모델 이름 또는 별칭으로 검색",
+    "models_no_match": "검색과 일치하는 모델이 없습니다."
   },
   "notification": {
     "trusted_proxies_restart_required": "신뢰할 수 있는 프록시 설정이 저장되었습니다. 적용하려면 백엔드를 재시작하세요.",
@@ -2210,7 +2218,12 @@
         "baseUrlRequired": "기본 URL은 필수입니다.",
         "weightInteger": "스케줄링 가중치는 정수여야 합니다.",
         "weightMax": "스케줄링 가중치는 {{max}}을(를) 초과할 수 없습니다."
-      }
+      },
+      "cloakModeDefault": "서버 기본값",
+      "headerName": "헤더 이름",
+      "headerValue": "헤더 값",
+      "removeHeader": "헤더 제거",
+      "removeApiKeyEntry": "이 API 키 항목 제거"
     },
     "delete": {
       "title": "리소스 삭제",

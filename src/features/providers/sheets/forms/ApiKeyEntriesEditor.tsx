@@ -177,6 +177,8 @@ export function ApiKeyEntriesEditor({
                 <button
                   type="button"
                   className={styles.removeBtn}
+                  aria-label={t('providersPage.form.removeApiKeyEntry')}
+                  title={t('providersPage.form.removeApiKeyEntry')}
                   disabled={mutating || removeDisabled}
                   onClick={() => handleRemove(idx)}
                 >

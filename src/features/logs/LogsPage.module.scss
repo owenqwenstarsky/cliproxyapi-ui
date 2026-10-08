@@ -206,6 +206,17 @@
   }
 }
 
+// 带文字状态的按钮（实时 / 已暂停）：不再是正方形
+.actionButtonLabelled:global(.btn) {
+  width: auto;
+  padding: 0 12px;
+
+  > span {
+    align-items: center;
+    gap: 6px;
+  }
+}
+
 .container :global(.btn) {
   transition:
     background-color 120ms ease,

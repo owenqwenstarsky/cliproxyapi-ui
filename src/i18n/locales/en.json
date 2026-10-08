@@ -1080,7 +1080,9 @@
     "search_empty_desc": "Try a different keyword or clear the filters.",
     "double_click_copy_hint": "Double-click to copy raw log line",
     "copy_success": "Log copied to clipboard",
-    "copy_failed": "Copy failed"
+    "copy_failed": "Copy failed",
+    "live_on": "Live",
+    "live_paused": "Paused"
   },
   "config_management": {
     "title": "Config Panel",
@@ -1599,7 +1601,9 @@
         "delete": "Delete",
         "cancel": "Cancel",
         "update": "Update",
-        "add": "Add"
+        "add": "Add",
+        "remove_rule_title": "Delete this rule?",
+        "remove_rule_message": "The rule and everything inside it (models, parameters, headers) will be removed from the draft. Nothing is saved until you save the config."
       }
     }
   },
@@ -1848,7 +1852,11 @@
     "clear_login_title": "Local Login Data",
     "clear_login_desc": "Clear locally saved login data and sign out.",
     "clear_login_button": "Clear login data",
-    "clear_login_confirm": "Clear local login data and sign out now?"
+    "clear_login_confirm": "Clear local login data and sign out now?",
+    "models_other": "Other",
+    "models_search_label": "Search models",
+    "models_search_placeholder": "Search by model name or alias",
+    "models_no_match": "No models match your search."
   },
   "notification": {
     "trusted_proxies_restart_required": "Trusted proxy settings saved. Restart the backend to apply them.",
@@ -2210,7 +2218,12 @@
         "baseUrlRequired": "Base URL is required",
         "weightInteger": "Scheduling weight must be an integer",
         "weightMax": "Scheduling weight cannot exceed {{max}}"
-      }
+      },
+      "cloakModeDefault": "Server default",
+      "headerName": "Header name",
+      "headerValue": "Header value",
+      "removeHeader": "Remove header",
+      "removeApiKeyEntry": "Remove this API key entry"
     },
     "delete": {
       "title": "Delete resource",
