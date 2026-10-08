@@ -19,7 +19,10 @@ export interface TrafficWindow {
   windowMinutes: number;
 }
 
-/** 单个供应商的流量切片 */
+/**
+ * 单个供应商的流量切片。success / failure 是窗口内（桶之和）的数值，
+ * 与整体 TrafficWindow、图表同口径；累计计数器不在此处使用。
+ */
 export interface ProviderTraffic {
   id: string;
   credentials: number;
@@ -30,12 +33,18 @@ export interface ProviderTraffic {
   buckets: RecentRequestBucket[];
 }
 
-/** 凭证健康度 */
-export interface CredentialHealth {
+/** 凭证健康度汇总（判定规则见 authFiles/health.ts） */
+export interface CredentialSummary {
   total: number;
-  active: number;
+  healthy: number;
+  /** 用户主动停用，不算问题 */
   disabled: number;
-  unavailable: number;
+  /** 需要处理的问题凭证 */
+  problem: number;
+  /** 当前存在生效冷却的凭证数（运行时限速，不计入健康度） */
+  cooling: number;
+  /** 问题凭证的标识（邮箱 / 项目 / 文件名），用于在清单里直接点名 */
+  problemNames: string[];
   /** 按供应商类型分组的凭证数，按数量降序 */
   byType: Array<{ type: string; count: number }>;
 }

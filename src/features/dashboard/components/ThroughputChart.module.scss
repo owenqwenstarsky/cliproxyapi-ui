@@ -135,8 +135,8 @@
   display: flex;
   flex-direction: column;
   justify-content: flex-end;
-  animation: barGrow 0.42s cubic-bezier(0.4, 0, 0.2, 1) both;
-  /* 级差由 TSX 按桶数归一化写入，整波 ≤360ms */
+  animation: barGrow 0.24s cubic-bezier(0.4, 0, 0.2, 1) both;
+  /* 级差由 TSX 按桶数归一化写入，整波 ≤120ms：数据出现得越快越好读 */
   animation-delay: var(--bar-delay, 0ms);
   transform-origin: bottom center;
   transition: filter 120ms ease-out;
@@ -375,4 +375,21 @@
   to {
     opacity: 1;
   }
+}
+
+// 失败请求再少也必须看得见：1/500 的失败按比例只有不到 1px，等于没画
+.segmentFailure {
+  min-height: 4px;
+  flex-shrink: 0;
+}
+
+// 最新一桶仍在累计，用淡色避免被误读成“流量骤降”
+.columnPartial .stack {
+  opacity: 0.55;
+}
+
+.columns:focus-visible {
+  outline: 2px solid var(--focus-color);
+  outline-offset: 4px;
+  border-radius: $radius-sm;
 }

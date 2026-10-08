@@ -378,7 +378,7 @@ export function MainLayout() {
           metaKey: 'nav_meta.dashboard',
           icon: sidebarIcons.dashboard,
         },
-        ...(!isApiKeyFunConfigured ? [quickStartNavItem] : []),
+        quickStartNavItem,
       ],
     },
     {
@@ -411,7 +411,6 @@ export function MainLayout() {
           metaKey: 'nav_meta.oauth',
           icon: sidebarIcons.oauth,
         },
-        ...(isApiKeyFunConfigured ? [quickStartNavItem] : []),
       ],
     },
     {

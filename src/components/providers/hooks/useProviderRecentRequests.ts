@@ -114,6 +114,7 @@ export function useProviderRecentRequests(options: UseProviderRecentRequestsOpti
     value: cache.cachedUsageByProvider,
   }));
   const [loadingState, setLoadingState] = useState(() => ({ cache, value: false }));
+  const [errorState, setErrorState] = useState(() => ({ cache, value: false }));
 
   const setUsageForCurrentScope = useCallback(
     (value: ProviderRecentRequests) => setUsageState({ cache, value }),
@@ -122,6 +123,11 @@ export function useProviderRecentRequests(options: UseProviderRecentRequestsOpti
 
   const setLoadingForCurrentScope = useCallback(
     (value: boolean) => setLoadingState({ cache, value }),
+    [cache]
+  );
+
+  const setErrorForCurrentScope = useCallback(
+    (value: boolean) => setErrorState({ cache, value }),
     [cache]
   );
 
@@ -144,8 +150,10 @@ export function useProviderRecentRequests(options: UseProviderRecentRequestsOpti
       try {
         const nextUsage = await fetchProviderRecentRequests(cache);
         setUsageForCurrentScope(nextUsage);
+        setErrorForCurrentScope(false);
         return nextUsage;
       } catch {
+        setErrorForCurrentScope(true);
         if (cache.cachedAt > 0) {
           setUsageForCurrentScope(cache.cachedUsageByProvider);
         }
@@ -154,7 +162,7 @@ export function useProviderRecentRequests(options: UseProviderRecentRequestsOpti
         setLoadingForCurrentScope(false);
       }
     },
-    [cache, enabled, setLoadingForCurrentScope, setUsageForCurrentScope]
+    [cache, enabled, setErrorForCurrentScope, setLoadingForCurrentScope, setUsageForCurrentScope]
   );
 
   const refreshRecentRequests = useCallback(
@@ -182,9 +190,15 @@ export function useProviderRecentRequests(options: UseProviderRecentRequestsOpti
   const isLoading =
     loadingState.cache === cache ? loadingState.value : cache.inFlightRequest !== null;
 
+  const hasError = errorState.cache === cache ? errorState.value : false;
+
   return {
     usageByProvider: enabled ? usageByProvider : EMPTY_USAGE_BY_PROVIDER,
     isLoading: enabled ? isLoading : false,
+    /** 最近一次刷新失败（缓存里可能仍有旧数据） */
+    hasError: enabled ? hasError : false,
+    /** 数据最近一次成功取回的时间戳（ms）；从未成功为 null */
+    updatedAt: enabled && cache.cachedAt > 0 ? cache.cachedAt : null,
     loadRecentRequests,
     refreshRecentRequests,
   };
