@@ -70,7 +70,7 @@
 }
 
 .iconFallback {
-  font-size: 11px;
+  font-size: 12px;
   font-weight: 700;
   color: var(--text-secondary);
 }
@@ -82,7 +82,18 @@
   font-weight: 600;
   letter-spacing: 0.01em;
   color: var(--text-primary);
+  text-decoration: none;
   @include text-ellipsis;
+
+  &:hover {
+    text-decoration: underline;
+    text-underline-offset: 3px;
+  }
+}
+
+.disabledBadge {
+  margin-left: auto;
+  flex-shrink: 0;
 }
 
 /* ---------- body 容器 ---------- */
@@ -145,7 +156,7 @@
 
 .idleHint {
   font-family: $font-mono;
-  font-size: 11.5px;
+  font-size: 12px;
   line-height: 1.5;
   text-align: center;
 }
@@ -216,7 +227,7 @@
 /* ---------- error ---------- */
 
 .errorStrip {
-  font-size: 11.5px;
+  font-size: 12px;
   line-height: 1.5;
   color: var(--viz-failure);
   background: color-mix(in srgb, var(--viz-failure) 8%, transparent);
@@ -245,7 +256,7 @@
   border-radius: $radius-full;
   background: none;
   padding: 5px 11px;
-  font-size: 11.5px;
+  font-size: 12px;
   font-weight: 600;
   line-height: 1.4;
   color: var(--text-secondary);

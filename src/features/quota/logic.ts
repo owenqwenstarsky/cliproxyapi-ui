@@ -112,6 +112,30 @@ export function sortQuotaEntries(
     .map((decorated) => decorated.entry);
 }
 
+export const QUOTA_STATUS_FILTERS = ['all', 'attention', 'unloaded'] as const;
+export type QuotaStatusFilter = (typeof QUOTA_STATUS_FILTERS)[number];
+
+export const isQuotaStatusFilter = (value: unknown): value is QuotaStatusFilter =>
+  typeof value === 'string' && (QUOTA_STATUS_FILTERS as readonly string[]).includes(value);
+
+export type QuotaLoadStatus = 'idle' | 'loading' | 'success' | 'error';
+
+/**
+ * 按额度加载状态筛选。额度的“剩余多少”是各提供商自有的数据形状，没有统一口径，
+ * 所以这里只用所有提供商都有的加载状态：加载失败 = 需要处理；还没加载 = 未知。
+ */
+export function filterEntriesByStatus(
+  entries: QuotaFileEntry[],
+  filter: QuotaStatusFilter,
+  statusOf: (entry: QuotaFileEntry) => QuotaLoadStatus | undefined
+): QuotaFileEntry[] {
+  if (filter === 'all') return entries;
+  return entries.filter((entry) => {
+    const status = statusOf(entry) ?? 'idle';
+    return filter === 'attention' ? status === 'error' : status === 'idle';
+  });
+}
+
 export function buildTabCounts(entries: QuotaFileEntry[]): Record<string, number> {
   const counts: Record<string, number> = { all: entries.length };
   for (const type of QUOTA_TAB_ORDER) {

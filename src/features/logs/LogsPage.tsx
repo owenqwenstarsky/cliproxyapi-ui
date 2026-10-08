@@ -700,7 +700,7 @@ export function LogsPage() {
                 <Button
                   variant="secondary"
                   size="sm"
-                  className={styles.actionButton}
+                  className={`${styles.actionButton} ${styles.actionButtonLabelled}`}
                   aria-pressed={autoRefresh}
                   aria-label={t('logs.reading_enabled')}
                   title={t('logs.reading_enabled')}
@@ -708,6 +708,8 @@ export function LogsPage() {
                   disabled={autoRefreshDisabled}
                 >
                   <IconTimer size={16} />
+                  {/* 文字状态：一眼看出是在实时刷新还是已暂停 */}
+                  <span>{autoRefresh ? t('logs.live_on') : t('logs.live_paused')}</span>
                 </Button>
                 <Button
                   variant="secondary"

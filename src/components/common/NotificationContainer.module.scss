@@ -1,9 +1,10 @@
 .container {
   position: fixed;
   z-index: $z-notification;
-  top: max(1rem, env(safe-area-inset-top));
+  // 顶栏下方出现，避免盖住刷新/主题/登出等头部操作
+  top: calc(var(--header-height, 52px) + 0.5rem);
   inset-inline: 0;
-  max-height: calc(100dvh - max(1rem, env(safe-area-inset-top)) - 1rem);
+  max-height: calc(100dvh - var(--header-height, 52px) - 1.5rem);
   margin-inline: auto;
   display: flex;
   flex-direction: column;

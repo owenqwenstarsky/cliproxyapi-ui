@@ -1,10 +1,5 @@
 export const AUTH_FILES_SORT_MODES = ['default', 'az', 'priority'] as const;
-export const AUTH_FILES_STATUS_FILTER_MODES = [
-  'all',
-  'enabled',
-  'disabled',
-  'problem',
-] as const;
+export const AUTH_FILES_STATUS_FILTER_MODES = ['all', 'enabled', 'disabled', 'problem'] as const;
 
 export type AuthFilesSortMode = (typeof AUTH_FILES_SORT_MODES)[number];
 export type AuthFilesStatusFilterMode = (typeof AUTH_FILES_STATUS_FILTER_MODES)[number];
@@ -91,4 +86,97 @@ export const writePersistedAuthFilesCompactMode = (compactMode: boolean) => {
   } catch {
     // ignore
   }
+};
+
+export interface InitialAuthFilesUiState {
+  filter: string;
+  statusFilterMode: AuthFilesStatusFilterMode;
+  compactMode: boolean;
+  pageSizeByMode: { regular: number; compact: number };
+  sortMode: AuthFilesSortMode;
+}
+
+interface ResolveInitialAuthFilesUiStateInput {
+  persisted: AuthFilesUiState | null;
+  persistedCompactMode: boolean | null;
+  /** 来自 URL（?filter=problem）的状态筛选，优先于已保存的值 */
+  urlStatusFilter?: string | null;
+  defaults: { regularPageSize: number; compactPageSize: number };
+  normalizeFilter: (value: string) => string;
+  clampPageSize: (value: number) => number;
+}
+
+const normalizePersistedStatusFilterMode = (value: unknown): AuthFilesStatusFilterMode | null => {
+  // 旧版本把“停用 + 问题”合并保存为 disabledProblem
+  if (value === 'disabledProblem') return 'problem';
+  return isAuthFilesStatusFilterMode(value) ? value : null;
+};
+
+/**
+ * 计算页面的初始 UI 状态。以纯函数 + 惰性初始值的方式使用，首帧就是正确的视图，
+ * 不再先渲染默认值、再在 effect 里套用已保存的筛选（会闪一下）。
+ *
+ * 搜索词与页码刻意不恢复：过几天回来发现列表被一条陈旧的搜索词过滤、停在第 4 页，
+ * 比什么都没保存更糟。
+ */
+export const resolveInitialAuthFilesUiState = ({
+  persisted,
+  persistedCompactMode,
+  urlStatusFilter,
+  defaults,
+  normalizeFilter,
+  clampPageSize,
+}: ResolveInitialAuthFilesUiStateInput): InitialAuthFilesUiState => {
+  let filter = 'all';
+  let statusFilterMode: AuthFilesStatusFilterMode = 'all';
+  let compactMode = persistedCompactMode ?? false;
+  let sortMode: AuthFilesSortMode = 'default';
+  let regular = defaults.regularPageSize;
+  let compact = defaults.compactPageSize;
+
+  if (persisted) {
+    if (typeof persisted.filter === 'string' && persisted.filter.trim()) {
+      filter = normalizeFilter(persisted.filter);
+    }
+
+    const persistedMode = normalizePersistedStatusFilterMode(persisted.statusFilterMode);
+    if (persistedMode) {
+      statusFilterMode = persistedMode;
+    } else if (persisted.problemOnly === true) {
+      statusFilterMode = 'problem';
+    } else if (persisted.disabledOnly === true) {
+      statusFilterMode = 'disabled';
+    }
+
+    if (persistedCompactMode === null && typeof persisted.compactMode === 'boolean') {
+      compactMode = persisted.compactMode;
+    }
+
+    const finite = (value: unknown): value is number =>
+      typeof value === 'number' && Number.isFinite(value);
+    const legacy = finite(persisted.pageSize) ? clampPageSize(persisted.pageSize) : null;
+    regular = finite(persisted.regularPageSize)
+      ? clampPageSize(persisted.regularPageSize)
+      : (legacy ?? regular);
+    compact = finite(persisted.compactPageSize)
+      ? clampPageSize(persisted.compactPageSize)
+      : (legacy ?? compact);
+
+    if (isAuthFilesSortMode(persisted.sortMode)) sortMode = persisted.sortMode;
+  }
+
+  const fromUrl = normalizePersistedStatusFilterMode(urlStatusFilter);
+  if (fromUrl) {
+    statusFilterMode = fromUrl;
+    // 从仪表盘点进来是为了看“所有问题凭证”，不应再被上次选的供应商标签藏掉一部分
+    filter = 'all';
+  }
+
+  return {
+    filter,
+    statusFilterMode,
+    compactMode,
+    pageSizeByMode: { regular, compact },
+    sortMode,
+  };
 };

@@ -36,7 +36,14 @@ export function QuotaMeter({ percent, classes, index }: QuotaMeterProps) {
   }
 
   return (
-    <div className={classes.quotaBar}>
+    <div
+      className={classes.quotaBar}
+      role="progressbar"
+      aria-valuemin={0}
+      aria-valuemax={100}
+      aria-valuenow={normalized === null ? undefined : Math.round(normalized)}
+      aria-valuetext={normalized === null ? undefined : `${Math.round(normalized)}%`}
+    >
       <div className={`${classes.quotaBarFill} ${fillClass}`} style={style} />
     </div>
   );

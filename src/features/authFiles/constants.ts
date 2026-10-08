@@ -116,37 +116,12 @@ export const buildOAuthProviderOptions = (values: Iterable<unknown>): string[] =
   return [...OAUTH_PROVIDER_PRESETS, ...extraList];
 };
 
-export const getAuthFileStatusMessage = (file: AuthFileItem): string => {
-  const raw = file['status_message'] ?? file.statusMessage;
-  if (typeof raw === 'string') return raw.trim();
-  if (raw == null) return '';
-  return String(raw).trim();
-};
-
-/** 这些 status_message 视为健康，不触发告警态。 */
-export const HEALTHY_AUTH_FILE_STATUS_MESSAGES = new Set([
-  'ok',
-  'healthy',
-  'ready',
-  'success',
-  'available',
-]);
-
-/** 是否存在非健康的 status_message（卡片告警态 / 谱条琥珀色共用判定）。 */
-export const hasAuthFileStatusWarning = (file: AuthFileItem): boolean => {
-  const message = getAuthFileStatusMessage(file);
-  return Boolean(message) && !HEALTHY_AUTH_FILE_STATUS_MESSAGES.has(message.toLowerCase());
-};
-
-/**
- * 是否为需要用户处理的问题凭证。
- * 主动停用是独立状态，不应进入“问题”筛选或“删除问题凭证”的批量操作。
- */
-export const isProblemAuthFile = (file: AuthFileItem): boolean => {
-  const status = typeof file.status === 'string' ? file.status.trim().toLowerCase() : '';
-  if (file.disabled === true || status === 'disabled') return false;
-  return file.unavailable === true || status === 'error' || hasAuthFileStatusWarning(file);
-};
+export {
+  HEALTHY_AUTH_FILE_STATUS_MESSAGES,
+  getAuthFileStatusMessage,
+  hasAuthFileStatusWarning,
+  isProblemAuthFile,
+} from './health';
 
 export const getTypeLabel = (t: TFunction, type: string): string => {
   const providerKey = normalizeProviderKey(type);

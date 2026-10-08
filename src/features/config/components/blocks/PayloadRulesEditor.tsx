@@ -14,6 +14,7 @@ import {
   getPayloadParamValidationError,
   VISUAL_CONFIG_PAYLOAD_VALUE_TYPE_OPTIONS,
 } from '@/hooks/useVisualConfig';
+import { useConfirmRuleRemoval } from '../../hooks/useConfirmRuleRemoval';
 import { FieldShell } from '../fields/FieldPrimitives';
 import { ExpandableInput } from './ExpandableInput';
 import { StringListEditor } from './StringListEditor';
@@ -90,7 +91,14 @@ export const PayloadRulesEditor = memo(function PayloadRulesEditor({
   const [modelAdvancedOverrides, setModelAdvancedOverrides] = useState<Record<string, boolean>>({});
 
   const addRule = () => onChange([...rules, { id: makeClientId(), models: [], params: [] }]);
-  const removeRule = (ruleIndex: number) => onChange(rules.filter((_, i) => i !== ruleIndex));
+  const confirmRuleRemoval = useConfirmRuleRemoval();
+  const removeRule = (ruleIndex: number) => {
+    const rule = rules[ruleIndex];
+    const hasContent =
+      rule.models.some((model) => model.name.trim() !== '') ||
+      rule.params.some((param) => param.path.trim() !== '' || param.value.trim() !== '');
+    confirmRuleRemoval(hasContent, () => onChange(rules.filter((_, i) => i !== ruleIndex)));
+  };
 
   const updateRule = (ruleIndex: number, patch: Partial<PayloadRule>) =>
     onChange(rules.map((rule, i) => (i === ruleIndex ? { ...rule, ...patch } : rule)));

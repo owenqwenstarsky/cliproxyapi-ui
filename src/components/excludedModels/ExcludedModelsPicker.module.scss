@@ -267,7 +267,7 @@
 .rowReason {
   overflow: hidden;
   color: var(--text-tertiary);
-  font-size: 11px;
+  font-size: 12px;
   text-overflow: ellipsis;
   white-space: nowrap;
 }
@@ -278,7 +278,7 @@
   border: 1px dashed color-mix(in srgb, var(--primary-color) 38%, var(--border-color));
   border-radius: $radius-full;
   color: var(--text-secondary);
-  font-size: 10px;
+  font-size: 12px;
 }
 
 .badgeMuted {
@@ -310,7 +310,7 @@
 
 .footerCount {
   color: var(--text-secondary);
-  font-size: 11px;
+  font-size: 12px;
   font-variant-numeric: tabular-nums;
 }
 
@@ -326,7 +326,7 @@
   border-radius: $radius-sm;
   background: transparent;
   color: var(--text-secondary);
-  font-size: 11px;
+  font-size: 12px;
   cursor: pointer;
   transition:
     background-color var(--dur-hover, 200ms) var(--ease-out-strong, ease-out),
@@ -380,7 +380,7 @@
   border-radius: $radius-sm;
   background: var(--bg-primary);
   color: var(--text-primary);
-  font-size: 11px;
+  font-size: 12px;
   cursor: pointer;
   transition: transform var(--dur-press, 160ms) var(--ease-out-strong, ease-out);
 
@@ -392,7 +392,7 @@
 .chipsMore {
   align-self: center;
   color: var(--text-tertiary);
-  font-size: 11px;
+  font-size: 12px;
 }
 
 .ruleEditor {
@@ -420,7 +420,7 @@
     align-items: center;
     gap: 6px;
     color: var(--text-tertiary);
-    font-size: 11px;
+    font-size: 12px;
   }
 
   code {
@@ -440,7 +440,7 @@
   gap: 6px;
   margin: 0;
   color: var(--warning-color, #{$warning-color});
-  font-size: 11px;
+  font-size: 12px;
 }
 
 /* -------------------------------------------------------------------------- */

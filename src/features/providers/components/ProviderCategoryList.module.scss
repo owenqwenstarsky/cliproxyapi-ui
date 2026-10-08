@@ -31,6 +31,15 @@
   display: flex;
   flex-direction: column;
   gap: 4px;
+
+  // 窄屏：纵向长列表会把真正的数据推到 700px 以下，改成一行可横向滚动的芯片
+  @media (max-width: 1279px) {
+    flex-direction: row;
+    gap: 6px;
+    overflow-x: auto;
+    padding-bottom: 4px;
+    scrollbar-width: thin;
+  }
 }
 
 .item {
@@ -46,6 +55,12 @@
   text-align: left;
   width: 100%;
   color: var(--text-primary);
+
+  @media (max-width: 1279px) {
+    width: auto;
+    flex: 0 0 auto;
+    white-space: nowrap;
+  }
   transition:
     background-color $transition-fast,
     border-color $transition-fast,

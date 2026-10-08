@@ -54,7 +54,22 @@
     "model_alias_placeholder": "Bí danh model (tùy chọn)",
     "invalid_provider_index": "Chỉ mục provider không hợp lệ.",
     "unsaved_changes_title": "Thay đổi chưa lưu",
-    "unsaved_changes_message": "Bạn có thay đổi chưa lưu. Rời đi bây giờ sẽ mất các thay đổi đó. Bạn có muốn rời đi không?"
+    "unsaved_changes_message": "Bạn có thay đổi chưa lưu. Rời đi bây giờ sẽ mất các thay đổi đó. Bạn có muốn rời đi không?",
+    "skip_to_content": "Bỏ qua tới nội dung",
+    "clear_search": "Xóa tìm kiếm",
+    "pagination_label": "Phân trang",
+    "pagination_prev": "Trước",
+    "pagination_next": "Sau",
+    "pagination_page": "Trang {{page}}",
+    "pagination_total": "{{count}} mục",
+    "error_boundary_title": "Trang này gặp sự cố",
+    "error_boundary_description": "Phần còn lại của ứng dụng vẫn hoạt động. Bạn có thể thử lại hoặc tải lại trang.",
+    "try_again": "Thử lại",
+    "reload_page": "Tải lại trang",
+    "updated": "Cập nhật {{time}}",
+    "updated_never": "Chưa cập nhật",
+    "just_now": "vừa xong",
+    "stale_data": "dữ liệu có thể đã cũ"
   },
   "title": {
     "login": "Trung tâm Quản lý CLI Proxy API",
@@ -87,27 +102,36 @@
     "error_server": "Backend gặp lỗi khi xử lý yêu cầu quản lý, hãy kiểm tra log máy chủ",
     "error_cors": "Yêu cầu cross-origin bị chặn, vui lòng kiểm tra cấu hình máy chủ",
     "error_ssl": "Xác minh chứng chỉ SSL/TLS thất bại",
-    "error_legacy_backend": "Backend này chấp nhận Management API v0 nhưng không cung cấp v8. Vui lòng nâng cấp CLIProxyAPI lên v8 hoặc mới hơn để sử dụng trang quản lý này."
+    "error_legacy_backend": "Backend này chấp nhận Management API v0 nhưng không cung cấp v8. Vui lòng nâng cấp CLIProxyAPI lên v8 hoặc mới hơn để sử dụng trang quản lý này.",
+    "show_key": "Hiện khóa",
+    "hide_key": "Ẩn khóa"
   },
   "header": {
     "refresh_all": "Làm mới tất cả",
-    "logout": "Đăng xuất"
+    "logout": "Đăng xuất",
+    "refreshing": "Đang làm mới…",
+    "logout_confirm_title": "Đăng xuất?",
+    "logout_confirm_message": "Bạn sẽ cần nhập lại khóa quản lý để kết nối lại."
   },
   "connection": {
-    "status": "Trạng thái kết nối:"
+    "status": "Trạng thái kết nối:",
+    "state_connected": "Đã kết nối",
+    "state_connecting": "Đang kết nối…",
+    "state_disconnected": "Mất kết nối",
+    "state_error": "Lỗi kết nối"
   },
   "nav": {
     "dashboard": "Bảng điều khiển",
     "quick_start": "Bắt đầu nhanh",
-    "ai_providers": "AI Provider",
+    "ai_providers": "Provider",
     "auth_files": "File xác thực",
-    "oauth": "Đăng nhập OAuth",
-    "quota_management": "Quản lý Quota",
+    "oauth": "OAuth",
+    "quota_management": "Quota",
     "plugins": "Plugin",
     "plugin_store": "Cửa hàng Plugin",
-    "config_management": "Bảng cấu hình",
-    "logs": "Trình xem Log",
-    "system_info": "Thông tin Trung tâm Quản lý"
+    "config_management": "Cấu hình",
+    "logs": "Log",
+    "system_info": "Hệ thống"
   },
   "nav_groups": {
     "operate": "Vận hành",
@@ -130,54 +154,24 @@
     "system_info": "Runtime & chẩn đoán"
   },
   "dashboard": {
-    "hero_verdict_good": "Mọi hệ thống ổn định",
-    "hero_verdict_warning": "Có chút trục trặc nhỏ",
-    "hero_verdict_critical": "Cần chú ý",
-    "hero_verdict_idle": "Tạm thời yên tĩnh",
-    "hero_verdict_offline": "Đang chờ kết nối",
-    "hero_verdict_connecting": "Đang kết nối",
-    "hero_period": ".",
-    "hero_requests_label": "Yêu cầu đã xử lý",
-    "hero_live": "Trực tiếp",
-    "hero_window_meta": "Cửa sổ trượt {{window}} · bucket 10 phút",
-    "hero_spark_label": "Lưu lượng yêu cầu trong {{window}} vừa qua",
-    "cta_manage_providers": "Quản lý provider",
-    "cta_inspect_logs": "Kiểm tra log",
-    "stats_aria": "Chỉ số chính",
     "success_rate": "Tỷ lệ thành công",
-    "stat_success_hint": "Trên {{total}} yêu cầu trong cửa sổ",
     "stat_credentials": "Credential",
-    "stat_credentials_hint": "{{active}} đang hoạt động · {{disabled}} không phục vụ",
     "stat_credentials_empty": "Chưa tìm thấy file credential nào",
     "stat_provider_keys": "Key provider",
     "stat_provider_keys_hint": "API key được cấu hình trên tất cả các thương hiệu",
-    "stat_models": "Model",
-    "stat_models_hint": "Được phục vụ qua proxy endpoint",
-    "traffic_eyebrow": "Lưu lượng trực tiếp",
-    "traffic_title": "Thông lượng, từng khoảng mười phút",
-    "traffic_description": "Số lần thành công và thất bại mỗi bucket 10 phút trong {{window}} vừa qua. Di chuột vào cột để xem phân tách chính xác.",
+    "traffic_title": "Lưu lượng",
     "traffic_table": "Bảng dữ liệu",
     "traffic_table_window": "Cửa sổ",
     "traffic_chart_summary": "{{total}} yêu cầu trong {{minutes}} phút vừa qua: {{success}} thành công, {{failed}} thất bại.",
     "traffic_unavailable": "Chưa có lưu lượng nào được ghi nhận",
     "traffic_unavailable_hint": "Bộ đếm sẽ xuất hiện khi proxy phục vụ yêu cầu đầu tiên.",
-    "fleet_eyebrow": "Toàn cảnh",
-    "fleet_title": "Mọi provider, đặt cạnh nhau",
-    "fleet_description": "Lưu lượng và tỷ lệ thành công của từng provider trong cùng cửa sổ.",
-    "fleet_empty": "Chưa có lưu lượng provider nào được ghi nhận.",
-    "fleet_credentials": "Credential: {{value}}",
-    "fleet_spark_label": "Lưu lượng yêu cầu của {{provider}}",
-    "fleet_requests": "yêu cầu",
     "provider_unknown": "Chưa xác định",
-    "health_eyebrow": "Sức khỏe",
     "health_title": "Trạng thái credential",
     "health_active": "Đang hoạt động",
     "health_unavailable": "Không khả dụng",
     "health_disabled": "Đã tắt",
-    "health_by_type": "Theo provider",
     "health_empty": "Chưa tìm thấy file credential nào.",
     "health_link": "Mở file xác thực",
-    "runtime_eyebrow": "Runtime",
     "runtime_title": "Tổng quan cấu hình",
     "runtime_routing": "Chiến lược định tuyến",
     "runtime_retry": "Thử lại yêu cầu",
@@ -191,17 +185,70 @@
     "runtime_ws_auth": "Xác thực WebSocket",
     "runtime_model_prefix": "Tiền tố model",
     "runtime_link": "Chỉnh sửa cấu hình",
-    "cta_eyebrow": "Tiếp theo",
-    "cta_title": "Nên đi đâu từ đây",
-    "cta_providers_desc": "Thêm API key, đặt ưu tiên và kiểm thử các thương hiệu.",
-    "cta_auth_files_desc": "Tải lên, làm mới và vô hiệu hóa credential OAuth.",
-    "cta_config_desc": "Tinh chỉnh định tuyến, thử lại, ghi log và truy cập.",
-    "cta_quota_desc": "Kiểm tra quota còn lại của từng credential.",
-    "cta_logs_desc": "Theo dõi yêu cầu và tải báo cáo lỗi.",
-    "cta_system_desc": "Chi tiết phiên bản và thông tin trung tâm quản lý.",
     "window_m": "{{minutes}}p",
     "window_h": "{{hours}}g",
-    "window_hm": "{{hours}}g {{minutes}}p"
+    "window_hm": "{{hours}}g {{minutes}}p",
+    "page_description": "Tình trạng gateway, lưu lượng và thông tin xác thực.",
+    "verdict": {
+      "healthy": "Mọi thứ hoạt động bình thường",
+      "idle": "Yên tĩnh — chưa có lưu lượng",
+      "attention": "Cần chú ý",
+      "critical": "Có sự cố nghiêm trọng",
+      "connecting": "Đang kết nối…",
+      "offline": "Chưa kết nối"
+    },
+    "status_detail_healthy": "Tỷ lệ thành công {{rate}} trên {{total}} yêu cầu trong {{window}} qua.",
+    "status_detail_idle": "Không có yêu cầu trong {{window}} qua và không có sự cố xác thực.",
+    "status_detail_offline": "Kết nối lại để xem trạng thái.",
+    "reason": {
+      "all_credentials_down": "Cả {{count}} thông tin xác thực đều không khả dụng",
+      "credentials_problem": "{{count}}/{{total}} thông tin xác thực không khả dụng",
+      "low_success": "Tỷ lệ thành công {{rate}}",
+      "provider_failing": "{{provider}} thành công {{rate}}",
+      "data_error_traffic": "Không tải được dữ liệu lưu lượng",
+      "data_error_credentials": "Không tải được thông tin xác thực"
+    },
+    "attention": {
+      "title": "Cần xử lý",
+      "empty": "Hiện không có gì cần xử lý.",
+      "review": "Xem",
+      "severity_critical": "Nghiêm trọng",
+      "severity_warning": "Cảnh báo",
+      "severity_info": "Thông tin",
+      "credentials_problem": "{{count}} thông tin xác thực không khả dụng",
+      "provider_failing": "{{provider}} đang lỗi — thành công {{rate}}",
+      "provider_failing_detail": "Trong {{window}} qua",
+      "recent_failures": "{{count}} yêu cầu thất bại trong {{window}} qua",
+      "cooling": "{{count}} thông tin xác thực đang hồi"
+    },
+    "error_all": "Không tải được lưu lượng và thông tin xác thực.",
+    "error_traffic": "Không tải được dữ liệu lưu lượng.",
+    "error_credentials": "Không tải được thông tin xác thực.",
+    "retry": "Thử lại",
+    "kpi": {
+      "label": "Số liệu chính",
+      "requests": "Yêu cầu",
+      "requests_hint": "{{window}} qua · {{failed}} thất bại",
+      "success_hint": "{{window}} qua",
+      "credentials_problem": "{{count}} cần xử lý",
+      "credentials_disabled": "{{count}} đã tắt",
+      "credentials_ok": "Tất cả bình thường",
+      "providers_hint": "{{models}} mô hình khả dụng",
+      "success_small_sample": "Mẫu nhỏ — chỉ {{count}} yêu cầu",
+      "success_no_requests": "Không có yêu cầu trong {{window}} qua"
+    },
+    "traffic_subtitle": "{{window}} qua, mỗi nhóm 10 phút · giờ máy chủ",
+    "traffic_partial": "đang thu thập",
+    "providers_title": "Nhà cung cấp",
+    "providers_empty": "Không có lưu lượng nhà cung cấp trong khoảng này.",
+    "providers_footnote": "Số liệu trong {{window}} qua, cùng khoảng với biểu đồ. Tỷ lệ thấp nhất lên đầu.",
+    "col_provider": "Nhà cung cấp",
+    "col_requests": "Yêu cầu",
+    "col_failures": "Lỗi",
+    "col_trend": "Xu hướng",
+    "provider_credentials": "{{count}} thông tin xác thực",
+    "provider_trend_label": "Yêu cầu {{provider}} theo thời gian",
+    "health_bar_label": "{{healthy}} bình thường, {{problem}} không khả dụng, {{disabled}} đã tắt"
   },
   "basic_settings": {
     "debug_enable": "Bật chế độ Debug",
@@ -227,7 +274,6 @@
     "no_results_clear": "Xóa bộ lọc",
     "title_section": "File xác thực",
     "upload_button": "Tải file lên",
-    "delete_all_button": "Xóa tất cả",
     "search_empty_title": "Không có file phù hợp",
     "search_empty_desc": "Hãy thử đổi bộ lọc hoặc xóa ô tìm kiếm.",
     "file_size": "Kích thước",
@@ -244,11 +290,8 @@
     "delete_confirm": "Bạn có chắc muốn xóa file",
     "delete_all_confirm": "Bạn có chắc muốn xóa tất cả file xác thực? Thao tác này không thể hoàn tác!",
     "delete_filtered_confirm": "Bạn có chắc muốn xóa tất cả file xác thực {{type}}? Thao tác này không thể hoàn tác!",
-    "delete_problem_button": "Xóa file có vấn đề",
-    "delete_problem_button_with_type": "Xóa file {{type}} có vấn đề",
     "delete_problem_confirm": "Bạn có chắc muốn xóa tất cả file xác thực có vấn đề? Thao tác này không thể hoàn tác!",
     "delete_problem_filtered_confirm": "Bạn có chắc muốn xóa tất cả file xác thực {{type}} có vấn đề? Thao tác này không thể hoàn tác!",
-    "delete_filtered_result_button": "Xóa kết quả đã lọc",
     "delete_filtered_result_confirm": "Bạn có chắc muốn xóa các file xác thực trong kết quả lọc hiện tại? Thao tác này không thể hoàn tác!",
     "upload_error_json": "Chỉ chấp nhận file JSON",
     "upload_error_size": "Kích thước file không được vượt quá {{maxSize}}",
@@ -268,9 +311,6 @@
     "delete_filtered_result_success": "Đã xóa thành công {{count}} file xác thực từ kết quả lọc",
     "delete_filtered_result_partial": "Hoàn tất xóa kết quả lọc: {{success}} thành công, {{failed}} thất bại",
     "delete_filtered_result_none": "Không có file xác thực nào xóa được trong kết quả lọc hiện tại",
-    "pagination_prev": "Trước",
-    "pagination_next": "Sau",
-    "pagination_info": "Trang {{current}} / {{total}} · {{count}} file",
     "search_label": "Tìm kiếm cấu hình",
     "search_placeholder": "Lọc theo tên, tài khoản, loại hoặc provider. Dùng * làm ký tự đại diện",
     "problem_filter_label": "Lọc trạng thái",
@@ -329,7 +369,6 @@
     "batch_download_partial": "Hoàn tất tải xuống: {{success}} thành công, {{failed}} thất bại",
     "batch_enable": "Bật",
     "batch_disable": "Tắt",
-    "prefix_proxy_button": "Chi tiết / Chỉnh sửa File xác thực",
     "prefix_proxy_loading": "Đang tải file xác thực...",
     "prefix_proxy_info_label": "Thông tin file xác thực (info)",
     "prefix_proxy_source_label": "JSON file xác thực (xem trước)",
@@ -433,7 +472,17 @@
     "policy_rules_hint": "Các quy tắc tùy chỉnh được ưu tiên theo thứ tự danh sách. Kế thừa hoặc danh sách trống sẽ sử dụng quy tắc kế thừa; điều này không vô hiệu hóa chúng. Mẫu biểu thức chính quy (Regex) dùng cú pháp của Go.",
     "policy_retry_invalid": "Nhập một số nguyên an toàn không âm, hoặc chọn Kế thừa.",
     "policy_aliases_invalid": "Nhập tên model và bí danh không để trống cho mỗi hàng mới hoặc đã chỉnh sửa.",
-    "policy_rules_invalid": "Hoàn thành mỗi quy tắc đã chỉnh sửa với mã trạng thái dương, một hành động và ít nhất một điều kiện khớp không để trống."
+    "policy_rules_invalid": "Hoàn thành mỗi quy tắc đã chỉnh sửa với mã trạng thái dương, một hành động và ít nhất một điều kiện khớp không để trống.",
+    "select_all_matching": "Chọn tất cả {{count}}",
+    "status_healthy": "Hoạt động",
+    "status_disabled": "Đã tắt",
+    "status_problem": "Không khả dụng",
+    "problem_reason_unavailable": "Máy chủ đã đánh dấu thông tin xác thực này là không khả dụng và không định tuyến yêu cầu tới nó.",
+    "problem_reason_error": "Thông tin xác thực này báo trạng thái lỗi.",
+    "problem_reason_status_message": "Thông tin xác thực này báo có sự cố.",
+    "settings_title": "Cài đặt thông tin xác thực",
+    "raw_data_label": "Dữ liệu tệp gốc",
+    "raw_data_hint": "Chỉ đọc"
   },
   "antigravity_subscription": {
     "plan_unknown": "Không rõ",
@@ -882,7 +931,9 @@
     "kimi_ai_oauth_status_success": "Xác thực thành công!",
     "kimi_ai_oauth_status_error": "Xác thực thất bại:",
     "kimi_ai_oauth_start_error": "Không thể bắt đầu đăng nhập Kimi quốc tế:",
-    "kimi_ai_oauth_polling_error": "Không thể kiểm tra trạng thái xác thực:"
+    "kimi_ai_oauth_polling_error": "Không thể kiểm tra trạng thái xác thực:",
+    "credentials_count": "Đã kết nối {{count}}",
+    "credentials_problem": "{{count}} không khả dụng"
   },
   "stats": {
     "success": "Thành công",
@@ -978,7 +1029,9 @@
     "clear_search": "Xóa tìm kiếm",
     "reading_enabled": "Đọc liên tục",
     "filter_load_more": "Hiển thị thêm log phù hợp",
-    "wrap_lines": "Tự động xuống dòng dài"
+    "wrap_lines": "Tự động xuống dòng dài",
+    "live_on": "Trực tiếp",
+    "live_paused": "Tạm dừng"
   },
   "config_management": {
     "title": "Bảng cấu hình",
@@ -1333,7 +1386,9 @@
         "delete": "Xóa",
         "cancel": "Hủy",
         "update": "Cập nhật",
-        "add": "Thêm"
+        "add": "Thêm",
+        "remove_rule_title": "Xóa quy tắc này?",
+        "remove_rule_message": "Quy tắc và mọi nội dung bên trong (mô hình, tham số, header) sẽ bị xóa khỏi bản nháp. Chưa có gì được lưu cho đến khi bạn lưu cấu hình."
       },
       "serverExtras": {
         "trustedProxies": {
@@ -1546,7 +1601,14 @@
     "search_placeholder": "Tìm theo tên file hoặc email",
     "search_empty_title": "Không có tài khoản phù hợp",
     "search_empty_desc": "Hãy thử tên file hoặc email khác, hoặc xóa tìm kiếm.",
-    "search_clear": "Xóa tìm kiếm"
+    "search_clear": "Xóa tìm kiếm",
+    "status_filter_label": "Lọc theo trạng thái quota",
+    "status_all": "Tất cả",
+    "status_attention": "Tải lỗi",
+    "status_unloaded": "Chưa tải",
+    "status_empty_attention": "Không có thông tin xác thực nào tải quota lỗi",
+    "status_empty_unloaded": "Đã tải quota của mọi thông tin xác thực",
+    "open_credential": "Mở thông tin xác thực này trong File xác thực"
   },
   "plugin_management": {
     "title": "Quản lý Plugin",
@@ -1739,7 +1801,11 @@
     "clear_login_title": "Dữ liệu đăng nhập cục bộ",
     "clear_login_desc": "Xóa dữ liệu đăng nhập đã lưu cục bộ và đăng xuất.",
     "clear_login_button": "Xóa dữ liệu đăng nhập",
-    "clear_login_confirm": "Xóa dữ liệu đăng nhập cục bộ và đăng xuất ngay?"
+    "clear_login_confirm": "Xóa dữ liệu đăng nhập cục bộ và đăng xuất ngay?",
+    "models_other": "Khác",
+    "models_search_label": "Tìm mô hình",
+    "models_search_placeholder": "Tìm theo tên hoặc bí danh mô hình",
+    "models_no_match": "Không có mô hình nào khớp."
   },
   "notification": {
     "request_log_updated": "Đã cập nhật cài đặt ghi log yêu cầu",
@@ -1785,7 +1851,9 @@
     "expand": "Mở rộng",
     "collapse": "Thu gọn",
     "subtitle": "Bảng điều khiển CLI Proxy API",
-    "auth_files_count": "File xác thực: {{count}}"
+    "auth_files_count": "File xác thực: {{count}}",
+    "nav_label": "Điều hướng chính",
+    "attention_count": "{{count}} thông tin xác thực cần xử lý"
   },
   "footer": {
     "api_version": "Phiên bản CLI Proxy API",
@@ -1851,7 +1919,6 @@
       "cloakTag": "Cloak",
       "empty": "Chưa có tài nguyên nào, nhấn \"Mới\" để thêm.",
       "filterPlaceholder": "Tìm key, URL, tiền tố…",
-      "description": "Quản lý tài nguyên trong {{route}}",
       "cliProfileTag": "Hồ sơ CLI"
     },
     "sponsor": {
@@ -2021,7 +2088,12 @@
       "fingerprintProfile": "Dấu vân tay yêu cầu",
       "fingerprintProfileDefault": "Mặc định (do phía gọi kiểm soát)",
       "fingerprintProfileClaudeCodeCli": "Claude Code CLI",
-      "fingerprintProfileHint": "Mặc định giữ nguyên prompt và header của phía gọi, hoặc chọn sử dụng dấu vân tay yêu cầu của Claude Code CLI."
+      "fingerprintProfileHint": "Mặc định giữ nguyên prompt và header của phía gọi, hoặc chọn sử dụng dấu vân tay yêu cầu của Claude Code CLI.",
+      "cloakModeDefault": "Mặc định của máy chủ",
+      "headerName": "Tên header",
+      "headerValue": "Giá trị header",
+      "removeHeader": "Xóa header",
+      "removeApiKeyEntry": "Xóa mục API key này"
     },
     "delete": {
       "title": "Xóa tài nguyên",

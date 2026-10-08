@@ -1,4 +1,4 @@
-import { useEffect, useId, useMemo, useState } from 'react';
+import { useEffect, useId, useMemo, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import {
   IconDownload,
@@ -10,6 +10,7 @@ import {
 } from '@/components/ui/icons';
 import { Collapsible } from '@/components/ui/Collapsible';
 import { Select } from '@/components/ui/Select';
+import { prefersReducedMotion } from '@/hooks/motion';
 import {
   DISABLE_ALL_RULE,
   ExcludedModelsPicker,
@@ -228,6 +229,13 @@ export function BaseProviderForm({
   onDirtyChange,
 }: BaseProviderFormProps) {
   const { t } = useTranslation();
+  // cloak mode 是固定枚举，不该让用户手敲；'' 表示沿用服务器默认
+  const cloakModeOptions = [
+    { value: '', label: t('providersPage.form.cloakModeDefault') },
+    { value: 'auto', label: 'auto' },
+    { value: 'always', label: 'always' },
+    { value: 'never', label: 'never' },
+  ];
   const descriptor = PROVIDER_DESCRIPTORS[brand];
   const fid = useId();
   const [form, setForm] = useState<ProviderEntryFormInput>(() =>
@@ -237,6 +245,16 @@ export function BaseProviderForm({
     JSON.stringify(buildInitialForm(brand, resource, mode))
   );
   const [error, setError] = useState<string | null>(null);
+  const errorRef = useRef<HTMLDivElement | null>(null);
+  // 校验信息在长表单底部：提交失败时把它滚进视野并交给读屏，否则看起来像“点了没反应”
+  useEffect(() => {
+    if (!error) return;
+    errorRef.current?.scrollIntoView({
+      behavior: prefersReducedMotion() ? 'auto' : 'smooth',
+      block: 'center',
+    });
+    errorRef.current?.focus({ preventScroll: true });
+  }, [error]);
   const [showSingleApiKey, setShowSingleApiKey] = useState(false);
 
   const isDirty = useMemo(
@@ -794,6 +812,7 @@ export function BaseProviderForm({
                 <input
                   className={styles.input}
                   placeholder="X-Custom-Header"
+                  aria-label={t('providersPage.form.headerName')}
                   value={entry.key}
                   onChange={(e) =>
                     updateField(
@@ -806,6 +825,7 @@ export function BaseProviderForm({
                 <input
                   className={styles.input}
                   placeholder="value"
+                  aria-label={t('providersPage.form.headerValue')}
                   value={entry.value}
                   onChange={(e) =>
                     updateField(
@@ -820,6 +840,8 @@ export function BaseProviderForm({
                 <button
                   type="button"
                   className={styles.removeBtn}
+                  aria-label={t('providersPage.form.removeHeader')}
+                  title={t('providersPage.form.removeHeader')}
                   disabled={mutating || headersList.length <= 1}
                   onClick={() =>
                     updateField(
@@ -945,13 +967,17 @@ export function BaseProviderForm({
         <Collapsible label={t('providersPage.form.cloakSection')}>
           <div className={styles.section}>
             <div className={styles.field}>
-              <label className={styles.label}>{t('providersPage.form.cloakMode')}</label>
-              <input
-                className={styles.input}
+              <label className={styles.label} id="cloak-mode-label">
+                {t('providersPage.form.cloakMode')}
+              </label>
+              <Select
                 value={form.cloak.mode}
-                onChange={(e) => updateCloak('mode', e.target.value)}
-                placeholder="auto / always / never"
+                options={cloakModeOptions}
+                onChange={(value) => updateCloak('mode', value)}
+                ariaLabelledBy="cloak-mode-label"
+                ariaLabel={t('providersPage.form.cloakMode')}
                 disabled={mutating}
+                fullWidth
               />
             </div>
             <label className={styles.checkboxRow}>
@@ -993,7 +1019,11 @@ export function BaseProviderForm({
         </Collapsible>
       ) : null}
 
-      {error ? <div className={styles.errorBox}>{error}</div> : null}
+      {error ? (
+        <div className={styles.errorBox} role="alert" tabIndex={-1} ref={errorRef}>
+          {error}
+        </div>
+      ) : null}
     </form>
   );
 }

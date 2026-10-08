@@ -1,18 +1,11 @@
 import { useEffect, useRef, useState, type ChangeEvent } from 'react';
 import { useTranslation } from 'react-i18next';
-import { Input } from '@/components/ui/Input';
+import { SearchInput } from '@/components/ui/SearchInput';
 import { Select } from '@/components/ui/Select';
-import { LoadingSpinner } from '@/components/ui/LoadingSpinner';
 import { ToggleSwitch } from '@/components/ui/ToggleSwitch';
-import { IconSearch, IconSlidersHorizontal, IconTrash2 } from '@/components/ui/icons';
-import {
-  MAX_CARD_PAGE_SIZE,
-  MIN_CARD_PAGE_SIZE,
-} from '@/features/authFiles/constants';
-import type {
-  AuthFilesSortMode,
-  AuthFilesStatusFilterMode,
-} from '@/features/authFiles/uiState';
+import { IconSlidersHorizontal } from '@/components/ui/icons';
+import { MAX_CARD_PAGE_SIZE, MIN_CARD_PAGE_SIZE } from '@/features/authFiles/constants';
+import type { AuthFilesSortMode, AuthFilesStatusFilterMode } from '@/features/authFiles/uiState';
 import styles from './AuthFilesToolbar.module.scss';
 
 export type AuthFilesToolbarProps = {
@@ -29,15 +22,18 @@ export type AuthFilesToolbarProps = {
   onPageSizeCommit: (rawValue: string) => void;
   compactMode: boolean;
   onCompactModeChange: (value: boolean) => void;
-  deleteLabel: string;
-  deleteDisabled: boolean;
-  deleteLoading: boolean;
-  onDelete: () => void;
+  /** 当前筛选结果中可选中的条数 */
+  selectableCount: number;
+  allSelected: boolean;
+  selectDisabled: boolean;
+  /** 选中全部筛选结果；批量删除等破坏性操作都在随后出现的批量操作条里，带确认 */
+  onSelectAll: () => void;
 };
 
 /**
  * 工作区工具栏：搜索 · 状态分段 · 排序 · 显示设置 popover。
- * 「删除筛选结果」放在工具栏最右端——与限定它作用域的过滤器相邻（映射原则）。
+ * 「全选筛选结果」放在最右端：它只做选择，破坏性操作都在批量操作条里并带确认，
+ * 避免一个永远可见的“删除全部”按钮紧挨着搜索框。
  */
 export function AuthFilesToolbar(props: AuthFilesToolbarProps) {
   const {
@@ -54,10 +50,10 @@ export function AuthFilesToolbar(props: AuthFilesToolbarProps) {
     onPageSizeCommit,
     compactMode,
     onCompactModeChange,
-    deleteLabel,
-    deleteDisabled,
-    deleteLoading,
-    onDelete,
+    selectableCount,
+    allSelected,
+    selectDisabled,
+    onSelectAll,
   } = props;
   const { t } = useTranslation();
   const [displaySettingsOpen, setDisplaySettingsOpen] = useState(false);
@@ -88,12 +84,11 @@ export function AuthFilesToolbar(props: AuthFilesToolbarProps) {
   return (
     <div className={styles.toolbar}>
       <div className={styles.search}>
-        <Input
+        <SearchInput
           value={search}
-          onChange={(e) => onSearchChange(e.target.value)}
+          onChange={onSearchChange}
           placeholder={t('auth_files.search_placeholder')}
-          aria-label={t('auth_files.search_label')}
-          rightElement={<IconSearch className={styles.searchIcon} size={16} />}
+          label={t('auth_files.search_label')}
         />
       </div>
 
@@ -138,7 +133,7 @@ export function AuthFilesToolbar(props: AuthFilesToolbarProps) {
           aria-expanded={displaySettingsOpen}
           aria-controls="auth-files-display-settings"
           title={t('auth_files.display_options_label')}
-        onClick={() => setDisplaySettingsOpen((open) => !open)}
+          onClick={() => setDisplaySettingsOpen((open) => !open)}
         >
           <IconSlidersHorizontal size={15} />
           <span>{t('auth_files.display_options_label')}</span>
@@ -179,12 +174,11 @@ export function AuthFilesToolbar(props: AuthFilesToolbarProps) {
 
       <button
         type="button"
-        className={styles.deleteAction}
-        onClick={onDelete}
-        disabled={deleteDisabled}
+        className={styles.selectAction}
+        onClick={onSelectAll}
+        disabled={selectDisabled || selectableCount === 0 || allSelected}
       >
-        {deleteLoading ? <LoadingSpinner size={13} /> : <IconTrash2 size={14} />}
-        {deleteLabel}
+        {t('auth_files.select_all_matching', { count: selectableCount })}
       </button>
     </div>
   );

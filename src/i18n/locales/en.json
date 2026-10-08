@@ -54,7 +54,22 @@
     "model_alias_placeholder": "Model alias (optional)",
     "invalid_provider_index": "Invalid provider index.",
     "unsaved_changes_title": "Unsaved changes",
-    "unsaved_changes_message": "You have unsaved changes. Leaving now will discard them. Do you want to leave?"
+    "unsaved_changes_message": "You have unsaved changes. Leaving now will discard them. Do you want to leave?",
+    "skip_to_content": "Skip to content",
+    "clear_search": "Clear search",
+    "pagination_label": "Pagination",
+    "pagination_prev": "Previous",
+    "pagination_next": "Next",
+    "pagination_page": "Page {{page}}",
+    "pagination_total": "{{count}} items",
+    "error_boundary_title": "Something went wrong on this page",
+    "error_boundary_description": "The rest of the app is still working. You can try again or reload the page.",
+    "try_again": "Try again",
+    "reload_page": "Reload page",
+    "updated": "Updated {{time}}",
+    "updated_never": "Not updated yet",
+    "just_now": "just now",
+    "stale_data": "data may be out of date"
   },
   "title": {
     "login": "CLI Proxy API Management Center",
@@ -87,27 +102,36 @@
     "error_legacy_backend": "This backend accepts v0 Management API but does not provide v8. Upgrade CLIProxyAPI to v8 or later to use this management page.",
     "error_server": "Backend failed while handling the management request, check the server logs",
     "error_cors": "Cross-origin request blocked, please check server configuration",
-    "error_ssl": "SSL/TLS certificate verification failed"
+    "error_ssl": "SSL/TLS certificate verification failed",
+    "show_key": "Show key",
+    "hide_key": "Hide key"
   },
   "header": {
     "refresh_all": "Refresh All",
-    "logout": "Logout"
+    "logout": "Logout",
+    "refreshing": "Refreshing…",
+    "logout_confirm_title": "Log out?",
+    "logout_confirm_message": "You will need to enter the management key again to reconnect."
   },
   "connection": {
-    "status": "Connection Status:"
+    "status": "Connection Status:",
+    "state_connected": "Connected",
+    "state_connecting": "Connecting…",
+    "state_disconnected": "Disconnected",
+    "state_error": "Connection error"
   },
   "nav": {
     "dashboard": "Dashboard",
     "quick_start": "Quick Start",
-    "ai_providers": "AI Providers",
+    "ai_providers": "Providers",
     "auth_files": "Auth Files",
-    "oauth": "OAuth Login",
-    "quota_management": "Quota Management",
+    "oauth": "OAuth",
+    "quota_management": "Quota",
     "plugins": "Plugins",
     "plugin_store": "Plugin Store",
-    "config_management": "Config Panel",
-    "logs": "Logs Viewer",
-    "system_info": "Management Center Info"
+    "config_management": "Config",
+    "logs": "Logs",
+    "system_info": "System"
   },
   "nav_groups": {
     "operate": "Operate",
@@ -130,54 +154,24 @@
     "system_info": "Runtime & diagnostics"
   },
   "dashboard": {
-    "hero_verdict_good": "All systems steady",
-    "hero_verdict_warning": "Minor turbulence",
-    "hero_verdict_critical": "Needs attention",
-    "hero_verdict_idle": "Quiet for now",
-    "hero_verdict_offline": "Waiting to connect",
-    "hero_verdict_connecting": "Connecting",
-    "hero_period": ".",
-    "hero_requests_label": "Requests handled",
-    "hero_live": "Live",
-    "hero_window_meta": "Rolling {{window}} window · 10-minute buckets",
-    "hero_spark_label": "Request volume over the last {{window}}",
-    "cta_manage_providers": "Manage providers",
-    "cta_inspect_logs": "Inspect logs",
-    "stats_aria": "Key metrics",
     "success_rate": "Success rate",
-    "stat_success_hint": "Across {{total}} requests in the window",
     "stat_credentials": "Credentials",
-    "stat_credentials_hint": "{{active}} active · {{disabled}} not serving",
     "stat_credentials_empty": "No credential files found",
     "stat_provider_keys": "Provider keys",
     "stat_provider_keys_hint": "API keys configured across all brands",
-    "stat_models": "Models",
-    "stat_models_hint": "Served through the proxy endpoint",
-    "traffic_eyebrow": "Live traffic",
-    "traffic_title": "Throughput, ten minutes at a time",
-    "traffic_description": "Success and failure counts per 10-minute bucket across the last {{window}}. Hover a column for its exact split.",
+    "traffic_title": "Traffic",
     "traffic_table": "Data table",
     "traffic_table_window": "Window",
     "traffic_chart_summary": "{{total}} requests over the last {{minutes}} minutes: {{success}} succeeded, {{failed}} failed.",
     "traffic_unavailable": "No traffic recorded yet",
     "traffic_unavailable_hint": "Counters appear once the proxy has served its first request.",
-    "fleet_eyebrow": "Fleet",
-    "fleet_title": "Every provider, side by side",
-    "fleet_description": "Volume and success rate per provider over the same window.",
-    "fleet_empty": "No provider traffic recorded yet.",
-    "fleet_credentials": "Credentials: {{value}}",
-    "fleet_spark_label": "{{provider}} request volume",
-    "fleet_requests": "requests",
     "provider_unknown": "Unattributed",
-    "health_eyebrow": "Health",
     "health_title": "Credential status",
     "health_active": "Active",
     "health_unavailable": "Unavailable",
     "health_disabled": "Disabled",
-    "health_by_type": "By provider",
     "health_empty": "No credential files found.",
     "health_link": "Open auth files",
-    "runtime_eyebrow": "Runtime",
     "runtime_title": "Configuration at a glance",
     "runtime_routing": "Routing strategy",
     "runtime_retry": "Request retry",
@@ -191,17 +185,70 @@
     "runtime_ws_auth": "WebSocket auth",
     "runtime_model_prefix": "Model prefix",
     "runtime_link": "Edit configuration",
-    "cta_eyebrow": "Next",
-    "cta_title": "Where to go from here",
-    "cta_providers_desc": "Add API keys, set priorities, and test brands.",
-    "cta_auth_files_desc": "Upload, refresh, and disable OAuth credentials.",
-    "cta_config_desc": "Tune routing, retries, logging, and access.",
-    "cta_quota_desc": "Check remaining quota per credential.",
-    "cta_logs_desc": "Tail requests and download error reports.",
-    "cta_system_desc": "Version details and management center info.",
     "window_m": "{{minutes}}m",
     "window_h": "{{hours}}h",
-    "window_hm": "{{hours}}h {{minutes}}m"
+    "window_hm": "{{hours}}h {{minutes}}m",
+    "page_description": "Gateway health, traffic and credentials at a glance.",
+    "verdict": {
+      "healthy": "All systems normal",
+      "idle": "Quiet — no recent traffic",
+      "attention": "Needs attention",
+      "critical": "Something is broken",
+      "connecting": "Connecting…",
+      "offline": "Not connected"
+    },
+    "status_detail_healthy": "{{rate}} success across {{total}} requests in the last {{window}}.",
+    "status_detail_idle": "No requests in the last {{window}}, and no credential problems.",
+    "status_detail_offline": "Reconnect to see live status.",
+    "reason": {
+      "credentials_problem": "{{count}} of {{total}} credentials unavailable",
+      "low_success": "Success rate {{rate}}",
+      "provider_failing": "{{provider}} at {{rate}} success",
+      "data_error_traffic": "Couldn't load traffic data",
+      "data_error_credentials": "Couldn't load credentials",
+      "all_credentials_down": "No working credentials — {{count}} unavailable"
+    },
+    "attention": {
+      "title": "Needs attention",
+      "empty": "Nothing needs attention right now.",
+      "review": "Review",
+      "severity_critical": "Critical",
+      "severity_warning": "Warning",
+      "severity_info": "Info",
+      "provider_failing": "{{provider}} is failing — {{rate}} success",
+      "provider_failing_detail": "Over the last {{window}}",
+      "credentials_problem": "Unavailable credentials: {{count}}",
+      "recent_failures": "Failed requests in the last {{window}}: {{count}}",
+      "cooling": "Credentials cooling down: {{count}}"
+    },
+    "error_all": "Couldn't load traffic or credentials.",
+    "error_traffic": "Couldn't load traffic data.",
+    "error_credentials": "Couldn't load credentials.",
+    "retry": "Retry",
+    "kpi": {
+      "label": "Key numbers",
+      "requests": "Requests",
+      "requests_hint": "Last {{window}} · {{failed}} failed",
+      "success_hint": "Last {{window}}",
+      "credentials_problem": "{{count}} need attention",
+      "credentials_disabled": "{{count}} disabled",
+      "credentials_ok": "All healthy",
+      "providers_hint": "{{models}} models available",
+      "success_no_requests": "No requests in the last {{window}}",
+      "success_small_sample": "Too few requests to judge ({{count}})"
+    },
+    "traffic_subtitle": "Last {{window}} in 10-minute buckets · server time",
+    "traffic_partial": "still filling",
+    "providers_title": "Providers",
+    "providers_empty": "No provider traffic in this window.",
+    "providers_footnote": "Counts cover the last {{window}}, the same window as the chart. Worst success rate first.",
+    "col_provider": "Provider",
+    "col_requests": "Requests",
+    "col_failures": "Failed",
+    "col_trend": "Trend",
+    "provider_trend_label": "{{provider}} requests over time",
+    "health_bar_label": "{{healthy}} healthy, {{problem}} unavailable, {{disabled}} disabled",
+    "provider_credentials": "Credentials: {{count}}"
   },
   "basic_settings": {
     "debug_enable": "Enable Debug Mode",
@@ -227,7 +274,6 @@
     "no_results_clear": "Clear filters",
     "title_section": "Auth Files",
     "upload_button": "Upload File",
-    "delete_all_button": "Delete All",
     "search_empty_title": "No matching files",
     "search_empty_desc": "Try changing the filters or clearing the search box.",
     "file_size": "Size",
@@ -290,11 +336,8 @@
     "delete_confirm": "Are you sure you want to delete file",
     "delete_all_confirm": "Are you sure you want to delete all auth files? This operation cannot be undone!",
     "delete_filtered_confirm": "Are you sure you want to delete all {{type}} auth files? This operation cannot be undone!",
-    "delete_problem_button": "Delete Problem Files",
-    "delete_problem_button_with_type": "Delete Problematic {{type}} Files",
     "delete_problem_confirm": "Are you sure you want to delete all problematic auth files? This operation cannot be undone!",
     "delete_problem_filtered_confirm": "Are you sure you want to delete all problematic {{type}} auth files? This operation cannot be undone!",
-    "delete_filtered_result_button": "Delete filtered results",
     "delete_filtered_result_confirm": "Are you sure you want to delete auth files in the current filtered results? This operation cannot be undone!",
     "upload_error_json": "Only JSON files are allowed",
     "upload_error_size": "File size cannot exceed {{maxSize}}",
@@ -314,9 +357,6 @@
     "delete_filtered_result_success": "Deleted {{count}} auth files from the filtered results successfully",
     "delete_filtered_result_partial": "Filtered result deletion finished: {{success}} succeeded, {{failed}} failed",
     "delete_filtered_result_none": "No deletable auth files in the current filtered results",
-    "pagination_prev": "Previous",
-    "pagination_next": "Next",
-    "pagination_info": "Page {{current}} / {{total}} · {{count}} files",
     "search_label": "Search credentials by name, account, type, provider, or error message",
     "search_placeholder": "Search name, account, type, provider, or error (403, 429, invalid). Use * as a wildcard",
     "problem_filter_label": "Status Filter",
@@ -377,7 +417,6 @@
     "batch_download_partial": "Download finished: {{success}} succeeded, {{failed}} failed",
     "batch_enable": "Enable",
     "batch_disable": "Disable",
-    "prefix_proxy_button": "Auth File Details / Edit",
     "prefix_proxy_loading": "Loading auth file...",
     "prefix_proxy_info_label": "Auth file info (info)",
     "prefix_proxy_source_label": "Auth file JSON (preview)",
@@ -433,7 +472,17 @@
     "quota_refresh_single": "Refresh quota",
     "quota_refresh_hint": "Refresh quota only for this credential",
     "quota_refresh_success": "Quota refreshed for \"{{name}}\"",
-    "quota_refresh_failed": "Failed to refresh quota for \"{{name}}\": {{message}}"
+    "quota_refresh_failed": "Failed to refresh quota for \"{{name}}\": {{message}}",
+    "select_all_matching": "Select all {{count}}",
+    "status_healthy": "Active",
+    "status_disabled": "Disabled",
+    "status_problem": "Unavailable",
+    "problem_reason_unavailable": "The server marked this credential unavailable and is not routing requests to it.",
+    "problem_reason_error": "This credential reported an error status.",
+    "problem_reason_status_message": "This credential reported a problem.",
+    "settings_title": "Credential settings",
+    "raw_data_label": "Raw file data",
+    "raw_data_hint": "Read-only"
   },
   "antigravity_subscription": {
     "plan_unknown": "Unknown",
@@ -925,7 +974,9 @@
     "iflow_oauth_status_error": "Authentication failed:",
     "iflow_oauth_start_error": "Failed to start iFlow OAuth:",
     "iflow_oauth_polling_error": "Failed to check authentication status:",
-    "remote_access_disabled": "This login method is not available for remote access. Please access from localhost."
+    "remote_access_disabled": "This login method is not available for remote access. Please access from localhost.",
+    "credentials_count": "{{count}} connected",
+    "credentials_problem": "{{count}} unavailable"
   },
   "stats": {
     "success": "Success",
@@ -1021,7 +1072,9 @@
     "search_empty_desc": "Try a different keyword or clear the filters.",
     "double_click_copy_hint": "Double-click to copy raw log line",
     "copy_success": "Log copied to clipboard",
-    "copy_failed": "Copy failed"
+    "copy_failed": "Copy failed",
+    "live_on": "Live",
+    "live_paused": "Paused"
   },
   "config_management": {
     "title": "Config Panel",
@@ -1540,7 +1593,9 @@
         "delete": "Delete",
         "cancel": "Cancel",
         "update": "Update",
-        "add": "Add"
+        "add": "Add",
+        "remove_rule_title": "Delete this rule?",
+        "remove_rule_message": "The rule and everything inside it (models, parameters, headers) will be removed from the draft. Nothing is saved until you save the config."
       }
     }
   },
@@ -1589,7 +1644,14 @@
     "weekday_wed": "Wed",
     "weekday_thu": "Thu",
     "weekday_fri": "Fri",
-    "weekday_sat": "Sat"
+    "weekday_sat": "Sat",
+    "status_filter_label": "Filter by quota status",
+    "status_all": "All",
+    "status_attention": "Failed to load",
+    "status_unloaded": "Not loaded",
+    "status_empty_attention": "No credentials failed to load quota",
+    "status_empty_unloaded": "Every credential's quota has been loaded",
+    "open_credential": "Open this credential in Auth Files"
   },
   "plugin_management": {
     "title": "Plugin Management",
@@ -1782,7 +1844,11 @@
     "clear_login_title": "Local Login Data",
     "clear_login_desc": "Clear locally saved login data and sign out.",
     "clear_login_button": "Clear login data",
-    "clear_login_confirm": "Clear local login data and sign out now?"
+    "clear_login_confirm": "Clear local login data and sign out now?",
+    "models_other": "Other",
+    "models_search_label": "Search models",
+    "models_search_placeholder": "Search by model name or alias",
+    "models_no_match": "No models match your search."
   },
   "notification": {
     "trusted_proxies_restart_required": "Trusted proxy settings saved. Restart the backend to apply them.",
@@ -1828,7 +1894,9 @@
     "expand": "Expand",
     "collapse": "Collapse",
     "subtitle": "CLI Proxy API Console",
-    "auth_files_count": "Authentication files: {{count}}"
+    "auth_files_count": "Authentication files: {{count}}",
+    "nav_label": "Main navigation",
+    "attention_count": "{{count}} credentials need attention"
   },
   "footer": {
     "api_version": "CLI Proxy API Version",
@@ -1974,8 +2042,7 @@
       "cloakTag": "Cloak",
       "cliProfileTag": "CLI Profile",
       "empty": "No resources yet, click \"New\" to add.",
-      "filterPlaceholder": "Search keys, URLs, prefixes…",
-      "description": "Manage resources under {{route}}"
+      "filterPlaceholder": "Search keys, URLs, prefixes…"
     },
     "sponsor": {
       "protocolSummary": "Anthropic / OpenAI / Gemini / Codex API (Responses)",
@@ -2142,7 +2209,12 @@
         "baseUrlRequired": "Base URL is required",
         "weightInteger": "Scheduling weight must be an integer",
         "weightMax": "Scheduling weight cannot exceed {{max}}"
-      }
+      },
+      "cloakModeDefault": "Server default",
+      "headerName": "Header name",
+      "headerValue": "Header value",
+      "removeHeader": "Remove header",
+      "removeApiKeyEntry": "Remove this API key entry"
     },
     "delete": {
       "title": "Delete resource",

@@ -180,7 +180,7 @@
   border-radius: 5px;
   background: var(--bg-tertiary);
   color: var(--primary-color);
-  font-size: 11px;
+  font-size: 12px;
 }
 
 .toolbar {
@@ -203,6 +203,17 @@
     color: var(--primary-color);
     border-color: var(--primary-color);
     background: color-mix(in srgb, var(--primary-color) 10%, var(--bg-primary));
+  }
+}
+
+// 带文字状态的按钮（实时 / 已暂停）：不再是正方形
+.actionButtonLabelled:global(.btn) {
+  width: auto;
+  padding: 0 12px;
+
+  > span {
+    align-items: center;
+    gap: 6px;
   }
 }
 
@@ -302,7 +313,7 @@
   padding: 7px 12px;
   border-top: 1px solid var(--border-color);
   color: var(--text-secondary);
-  font-size: 11px;
+  font-size: 12px;
   line-height: 1.5;
   font-variant-numeric: tabular-nums;
   background: var(--bg-secondary);
@@ -354,7 +365,7 @@
   padding: 6px 12px;
   border-bottom: 1px solid var(--border-color);
   color: var(--text-secondary);
-  font-size: 11px;
+  font-size: 12px;
   background: var(--bg-secondary);
 }
 .loadMoreStats {
@@ -442,7 +453,7 @@
   display: inline-flex;
   align-items: center;
   white-space: nowrap;
-  font-size: 11px;
+  font-size: 12px;
   line-height: 20px;
 }
 .badge {
@@ -646,13 +657,13 @@
     padding: 5px 32px 5px 8px;
   }
   .wrapped .timestamp {
-    font-size: 10px;
+    font-size: 12px;
   }
   .statusBar {
     gap: 4px;
     padding: 6px 8px;
     flex-wrap: wrap;
-    font-size: 10px;
+    font-size: 12px;
   }
   .readStatus {
     flex-wrap: wrap;

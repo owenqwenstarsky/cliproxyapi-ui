@@ -16,6 +16,7 @@ import {
   IconSidebarStore,
   IconTrash2,
 } from '@/components/ui/icons';
+import { useConfirmDiscard } from '@/hooks/useConfirmDiscard';
 import { useHeaderRefresh } from '@/hooks/useHeaderRefresh';
 import { pluginsApi, pluginStoreApi } from '@/services/api';
 import { useAuthStore, useConfigStore, useNotificationStore } from '@/stores';
@@ -31,6 +32,7 @@ import {
   buildPluginConfigPatch,
   normalizePluginConfigFieldType,
   type PluginConfigDraft,
+  isPluginConfigDraftDirty,
 } from './pluginConfigDraft';
 import {
   getPluginTitle,
@@ -82,6 +84,8 @@ export function PluginsPage() {
   const [error, setError] = useState('');
   const [editingPlugin, setEditingPlugin] = useState<PluginListEntry | null>(null);
   const [draft, setDraft] = useState<PluginConfigDraft | null>(null);
+  // 打开时的草稿快照，用来判断是否有未保存的修改
+  const [initialDraft, setInitialDraft] = useState<PluginConfigDraft | null>(null);
   const [mutatingID, setMutatingID] = useState('');
   const [deletingID, setDeletingID] = useState('');
   const [openingConfigID, setOpeningConfigID] = useState('');
@@ -134,9 +138,11 @@ export function PluginsPage() {
     void loadPlugins();
   }, [loadPlugins]);
 
+  // 只依赖“是否已有插件数据”，而不是数据对象本身：之前每次开关插件都会整库重取一遍商店目录、
+  // 还先把 logo 清空闪一下。过期连接的 logo 由下面的 apiBase / managementKey 比对过滤。
+  const hasPluginData = Boolean(data);
   useEffect(() => {
-    setStoreLogos(null);
-    if (!connected || !data) return;
+    if (!connected || !hasPluginData) return;
     let cancelled = false;
     void pluginStoreApi.list().then(
       (response) => {
@@ -151,7 +157,7 @@ export function PluginsPage() {
     return () => {
       cancelled = true;
     };
-  }, [connected, apiBase, managementKey, data]);
+  }, [connected, apiBase, managementKey, hasPluginData]);
 
   const logoEntries =
     connected && storeLogos?.apiBase === apiBase && storeLogos.managementKey === managementKey
@@ -208,12 +214,15 @@ export function PluginsPage() {
       const currentConfig = await pluginsApi.getConfig(plugin.id);
       if (configRequestSeq.current !== requestSeq) return;
 
-      setDraft(buildPluginConfigDraft(plugin, currentConfig));
+      const opened = buildPluginConfigDraft(plugin, currentConfig);
+      setInitialDraft(opened);
+      setDraft(opened);
     } catch (err: unknown) {
       if (configRequestSeq.current !== requestSeq) return;
 
       setEditingPlugin(null);
       setDraft(null);
+      setInitialDraft(null);
       showNotification(
         hasStatus(err, 404)
           ? t('plugin_management.config_not_found')
@@ -230,10 +239,19 @@ export function PluginsPage() {
     }
   };
 
+  const savingConfig = Boolean(editingPlugin && mutatingID === editingPlugin.id);
+  const configDirty = isPluginConfigDraftDirty(initialDraft, draft);
+  const confirmDiscardConfig = useConfirmDiscard(configDirty, savingConfig);
+
+  // 关闭前先过“放弃未保存修改？”确认（Escape / 遮罩 / × / 取消都走这里）
   const closeConfigSheet = () => {
     if (mutatingID || openingConfigID || deletingID) return;
-    setEditingPlugin(null);
-    setDraft(null);
+    void confirmDiscardConfig().then((ok) => {
+      if (!ok) return;
+      setEditingPlugin(null);
+      setDraft(null);
+      setInitialDraft(null);
+    });
   };
 
   const updateDraft = (updater: (current: PluginConfigDraft) => PluginConfigDraft) => {
@@ -482,8 +500,6 @@ export function PluginsPage() {
     );
   };
 
-  const savingConfig = Boolean(editingPlugin && mutatingID === editingPlugin.id);
-
   return (
     <div className={styles.page}>
       {/* ── Page Header ── */}
@@ -678,7 +694,7 @@ export function PluginsPage() {
                     checked={plugin.enabled}
                     onChange={(enabled) => handleTogglePlugin(plugin, enabled)}
                     disabled={!connected || actionBusy}
-                    ariaLabel={t('plugin_management.enabled')}
+                    ariaLabel={`${t('plugin_management.enabled')}: ${getPluginTitle(plugin)}`}
                   />
                   <Button
                     variant="secondary"
@@ -724,7 +740,12 @@ export function PluginsPage() {
       {/* ── Config Sheet ── */}
       <Sheet
         open={Boolean(editingPlugin && draft)}
-        onClose={closeConfigSheet}
+        onClose={() => {
+          setEditingPlugin(null);
+          setDraft(null);
+          setInitialDraft(null);
+        }}
+        confirmClose={confirmDiscardConfig}
         size="lg"
         title={
           editingPlugin

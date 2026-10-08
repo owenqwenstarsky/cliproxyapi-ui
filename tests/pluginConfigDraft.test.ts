@@ -2,6 +2,8 @@ import { describe, expect, test } from 'bun:test';
 import {
   buildPluginConfigDraft,
   buildPluginConfigPatch,
+  isPluginConfigDraftDirty,
+  type PluginConfigDraft,
 } from '../src/features/plugins/pluginConfigDraft';
 import type { PluginConfigField } from '../src/types';
 
@@ -89,5 +91,44 @@ describe('plugin config draft', () => {
       patch: {},
       errors: { mixed: 'plugin_management.expected_array' },
     });
+  });
+});
+
+describe('plugin config draft dirty detection', () => {
+  const draft = (overrides: Partial<PluginConfigDraft> = {}): PluginConfigDraft => ({
+    enabled: true,
+    priority: '10',
+    values: { a: 'x', b: false },
+    errors: {},
+    enabledTouched: false,
+    priorityTouched: false,
+    touchedFields: {},
+    ...overrides,
+  });
+
+  test('an untouched draft is clean', () => {
+    expect(isPluginConfigDraftDirty(draft(), draft())).toBe(false);
+  });
+
+  test('derived state (errors, touched flags, key order) does not count as an edit', () => {
+    const current = draft({
+      errors: { a: 'required' },
+      enabledTouched: true,
+      touchedFields: { a: true },
+      values: { b: false, a: 'x' },
+    });
+    expect(isPluginConfigDraftDirty(draft(), current)).toBe(false);
+  });
+
+  test('changing enabled, priority or any value is dirty', () => {
+    expect(isPluginConfigDraftDirty(draft(), draft({ enabled: false }))).toBe(true);
+    expect(isPluginConfigDraftDirty(draft(), draft({ priority: '11' }))).toBe(true);
+    expect(isPluginConfigDraftDirty(draft(), draft({ values: { a: 'y', b: false } }))).toBe(true);
+    expect(isPluginConfigDraftDirty(draft(), draft({ values: { a: 'x', b: true } }))).toBe(true);
+  });
+
+  test('is clean when there is nothing to compare', () => {
+    expect(isPluginConfigDraftDirty(null, draft())).toBe(false);
+    expect(isPluginConfigDraftDirty(draft(), null)).toBe(false);
   });
 });

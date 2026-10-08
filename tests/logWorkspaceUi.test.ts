@@ -18,9 +18,9 @@ describe('log workspace layout contract', () => {
     expect(styles).not.toContain('resize: vertical');
     expect(styles).not.toMatch(/calc\(100vh\s*-/);
     expect(styles).not.toMatch(/\n\s*(?:height|min-height|max-height):\s*(?:360|420|480)px/);
-    expect(layout).toMatch(
-      /&\.content-logs\s*\{\s*height: 100dvh;\s*min-height: 0;\s*overflow: hidden;/
-    );
+    // 内容列在所有视口下都固定为一个视口高度的滚动容器；日志页再把滚动交给查看器自身
+    expect(layout).toMatch(/\.content \{[^}]*height: 100vh;[\s\S]*?height: 100dvh;/);
+    expect(layout).toMatch(/&\.content-logs\s*\{\s*overflow: hidden;/);
   });
 
   test('error archive and fullscreen share the flexible viewport contract', () => {

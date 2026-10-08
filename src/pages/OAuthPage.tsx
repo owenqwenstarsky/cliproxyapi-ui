@@ -4,13 +4,19 @@ import { useNavigate } from 'react-router-dom';
 import { Card } from '@/components/ui/Card';
 import { Button } from '@/components/ui/Button';
 import { Input } from '@/components/ui/Input';
+import { StatusBadge } from '@/components/ui/StatusBadge';
 import { IconPlug } from '@/components/ui/icons';
 import { useAuthStore, useNotificationStore, useThemeStore } from '@/stores';
-import { oauthApi, pluginsApi, type BuiltInOAuthProvider } from '@/services/api';
+import { authFilesApi, oauthApi, pluginsApi, type BuiltInOAuthProvider } from '@/services/api';
 import { vertexApi, type VertexImportResponse } from '@/services/api/vertex';
 import { copyToClipboard } from '@/utils/clipboard';
 import { getErrorMessage, isRecord } from '@/utils/helpers';
 import { notifyAuthFilesChanged } from '@/features/authFiles/authFilesEvents';
+import {
+  countCredentialsByProvider,
+  type ProviderCredentialCount,
+} from '@/features/authFiles/health';
+import { normalizeOAuthProviderKey } from '@/utils/providerKeys';
 import { getPluginTitle, resolvePluginAssetURL } from '@/features/plugins/pluginResources';
 import {
   KIMI_CHINESE_AFFILIATE_URL,
@@ -134,6 +140,9 @@ const PROVIDERS: BuiltInOAuthProviderCard[] = [
     icon: { light: iconDevin, dark: iconDevinDark },
   },
 ];
+
+/** 登录卡片 id → 对应凭证文件的 type（仅列出不一致的） */
+const CREDENTIAL_TYPE_BY_CARD_ID: Record<string, string> = { anthropic: 'claude' };
 
 const BUILTIN_PROVIDER_IDS = new Set<string>(PROVIDERS.map((provider) => provider.id));
 const CALLBACK_SUPPORTED = new Set<string>(['codex', 'anthropic', 'antigravity', 'xai', 'devin']);
@@ -276,6 +285,9 @@ export function OAuthPage() {
   const resolvedTheme = useThemeStore((state) => state.resolvedTheme);
   const [states, setStates] = useState<Record<string, ProviderState>>({});
   const [pluginProviders, setPluginProviders] = useState<PluginOAuthProviderCard[]>([]);
+  const [credentialCounts, setCredentialCounts] = useState<Map<string, ProviderCredentialCount>>(
+    () => new Map()
+  );
   const [vertexState, setVertexState] = useState<VertexImportState>({
     fileName: '',
     location: '',
@@ -335,10 +347,46 @@ export function OAuthPage() {
     };
   }, [apiBase]);
 
+  // 已有凭证数：登录前先看见“这个供应商你已经有 N 个、其中 M 个不可用”
+  useEffect(() => {
+    let cancelled = false;
+    authFilesApi
+      .list()
+      .then((response) => {
+        if (cancelled) return;
+        setCredentialCounts(countCredentialsByProvider(response.files, normalizeOAuthProviderKey));
+      })
+      .catch(() => {
+        // 仅是辅助信息，失败时不显示即可
+      });
+    return () => {
+      cancelled = true;
+    };
+  }, [apiBase]);
+
   const providerCards = useMemo<OAuthProviderCard[]>(
     () => [...PROVIDERS, ...pluginProviders],
     [pluginProviders]
   );
+
+  const renderCredentialCount = (providerId: string) => {
+    // 登录卡片的 id 与凭证文件的 type 并不总是同一个词（Anthropic 登录 → type 为 claude）
+    const credentialKey = CREDENTIAL_TYPE_BY_CARD_ID[providerId] ?? providerId;
+    const count = credentialCounts.get(normalizeOAuthProviderKey(credentialKey));
+    if (!count || count.total === 0) return null;
+    return (
+      <span className={styles.credentialCount}>
+        <StatusBadge tone="neutral">
+          {t('auth_login.credentials_count', { count: count.total })}
+        </StatusBadge>
+        {count.problem > 0 ? (
+          <StatusBadge tone="danger">
+            {t('auth_login.credentials_problem', { count: count.problem })}
+          </StatusBadge>
+        ) : null}
+      </span>
+    );
+  };
 
   const getProviderTitleText = (provider: OAuthProviderCard) =>
     provider.kind === 'plugin'
@@ -687,6 +735,7 @@ export function OAuthPage() {
           <span className={styles.cardTitle}>
             <OAuthProviderIcon provider={provider} theme={resolvedTheme} />
             <span>{getProviderTitleText(provider)}</span>
+            {renderCredentialCount(provider.id)}
           </span>
         }
         extra={

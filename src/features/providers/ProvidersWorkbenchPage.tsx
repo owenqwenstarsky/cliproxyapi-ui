@@ -1,5 +1,6 @@
 import { useCallback, useMemo, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
+import { Button } from '@/components/ui/Button';
 import { usePageTransitionLayer } from '@/components/common/PageTransitionLayer';
 import { useHeaderRefresh } from '@/hooks/useHeaderRefresh';
 import { Skeleton } from '@/components/ui/Skeleton';
@@ -285,7 +286,16 @@ export function ProvidersWorkbenchPage({ fixedBrand }: ProvidersWorkbenchPagePro
         : t('nav.quick_start')
       : undefined;
   const errorBanner = workbench.errorMessage ? (
-    <div className="error-box">{workbench.errorMessage}</div>
+    <div
+      className="error-box"
+      role="alert"
+      style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: 12 }}
+    >
+      <span>{workbench.errorMessage}</span>
+      <Button variant="secondary" size="sm" onClick={() => void workbench.refetch()}>
+        {t('dashboard.retry')}
+      </Button>
+    </div>
   ) : null;
 
   const openCreate = useCallback(() => {

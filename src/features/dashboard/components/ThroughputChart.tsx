@@ -47,8 +47,12 @@ export function ThroughputChart({ traffic }: ThroughputChartProps) {
 
   const xAxisTicks = useMemo(() => {
     if (buckets.length === 0) return [];
-    const positions = [0, Math.floor((buckets.length - 1) / 2), buckets.length - 1];
-    return Array.from(new Set(positions)).map((index) => ({
+    // 约每小时一个标签；末位永远保留，其余让位给它，避免文字互相重叠
+    const step = Math.max(1, Math.round(60 / TRAFFIC_BUCKET_MINUTES));
+    const last = buckets.length - 1;
+    const positions: number[] = [];
+    for (let index = last; index >= 0; index -= step) positions.unshift(index);
+    return positions.map((index) => ({
       index,
       label: bucketStartLabel(buckets[index]?.time, index, buckets.length),
     }));
@@ -115,23 +119,42 @@ export function ThroughputChart({ traffic }: ThroughputChartProps) {
 
           <div
             className={styles.columns}
-            role="img"
+            role="group"
             aria-label={summary}
+            tabIndex={0}
             onMouseLeave={() => setActiveIndex(null)}
+            onFocus={() => setActiveIndex((current) => current ?? buckets.length - 1)}
+            onBlur={() => setActiveIndex(null)}
+            onKeyDown={(event) => {
+              const last = buckets.length - 1;
+              const move = (next: number) => {
+                event.preventDefault();
+                setActiveIndex(Math.max(0, Math.min(last, next)));
+              };
+              if (event.key === 'ArrowLeft') move((activeIndex ?? last) - 1);
+              else if (event.key === 'ArrowRight') move((activeIndex ?? last) + 1);
+              else if (event.key === 'Home') move(0);
+              else if (event.key === 'End') move(last);
+              else if (event.key === 'Escape') setActiveIndex(null);
+            }}
           >
             {buckets.map((bucket, index) => {
               const bucketTotal = bucket.success + bucket.failed;
               const successHeight = (bucket.success / scaleMax) * 100;
               const failureHeight = (bucket.failed / scaleMax) * 100;
               const hasBoth = bucket.success > 0 && bucket.failed > 0;
-              /* 级差按桶数归一化：不管窗口多长，整波入场都收在 360ms 内 */
+              /* 级差按桶数归一化：不管窗口多长，整波入场都收在 120ms 内 */
               const barDelayMs =
-                buckets.length > 1 ? Math.round((index / (buckets.length - 1)) * 360) : 0;
+                buckets.length > 1 ? Math.round((index / (buckets.length - 1)) * 120) : 0;
+
+              const isPartial = index === buckets.length - 1;
 
               return (
                 <div
                   key={bucket.time ?? index}
-                  className={`${styles.column} ${activeIndex === index ? styles.columnActive : ''}`}
+                  className={`${styles.column} ${activeIndex === index ? styles.columnActive : ''} ${
+                    isPartial ? styles.columnPartial : ''
+                  }`}
                   onMouseEnter={() => setActiveIndex(index)}
                   onClick={() => setActiveIndex((current) => (current === index ? null : index))}
                 >
@@ -189,6 +212,7 @@ export function ThroughputChart({ traffic }: ThroughputChartProps) {
             >
               <span className={styles.tooltipTime}>
                 {bucketRangeLabel(activeBucket.time, activeIndex!, buckets.length)}
+                {activeIndex === buckets.length - 1 ? ` · ${t('dashboard.traffic_partial')}` : ''}
               </span>
               <span className={styles.tooltipRow}>
                 <span

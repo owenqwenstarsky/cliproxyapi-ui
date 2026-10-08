@@ -13,13 +13,18 @@ interface SparklineProps {
   color?: string;
   ariaLabel: string;
   className?: string;
+  /**
+   * 纵轴上限。多条迷你图并排比较时传入同一个值（共享刻度），
+   * 否则每条都按自己的最大值撑满，3 次请求和 3000 次请求看起来一样忙。
+   */
+  max?: number;
 }
 
 /**
  * 极简迷你折线：2px 线 + 同色 10% 面积。
  * 单序列，因此不需要图例；数值由所在卡片的文本承载。
  */
-export function Sparkline({ points, color, ariaLabel, className }: SparklineProps) {
+export function Sparkline({ points, color, ariaLabel, className, max: sharedMax }: SparklineProps) {
   const gradientId = useId();
 
   const geometry = useMemo(() => {
@@ -28,7 +33,7 @@ export function Sparkline({ points, color, ariaLabel, className }: SparklineProp
       return null;
     }
 
-    const max = Math.max(...values);
+    const max = Math.max(sharedMax ?? 0, ...values);
     const usableHeight = VIEW_HEIGHT - TOP_PADDING;
     const stepX = values.length > 1 ? VIEW_WIDTH / (values.length - 1) : 0;
 
@@ -45,8 +50,8 @@ export function Sparkline({ points, color, ariaLabel, className }: SparklineProp
     const last = coordinates[coordinates.length - 1];
     const area = `${line} L${last.x.toFixed(2)} ${VIEW_HEIGHT} L${first.x.toFixed(2)} ${VIEW_HEIGHT} Z`;
 
-    return { line, area, isFlat: max <= 0 };
-  }, [points]);
+    return { line, area, isFlat: Math.max(...values) <= 0 };
+  }, [points, sharedMax]);
 
   if (!geometry) {
     return (

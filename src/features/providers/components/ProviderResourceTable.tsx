@@ -1,12 +1,6 @@
 import type { ReactNode } from 'react';
 import { useTranslation } from 'react-i18next';
-import {
-  IconAlertTriangle,
-  IconCheckCircle2,
-  IconEye,
-  IconPencil,
-  IconTrash2,
-} from '@/components/ui/icons';
+import { IconEye, IconPencil, IconTrash2 } from '@/components/ui/icons';
 import {
   Table,
   TableBody,
@@ -15,6 +9,7 @@ import {
   TableHeader,
   TableRow,
 } from '@/components/ui/Table';
+import { StatusBadge } from '@/components/ui/StatusBadge';
 import { ToggleSwitch } from '@/components/ui/ToggleSwitch';
 import { ProviderStatusBar } from '@/components/providers/ProviderStatusBar';
 import {
@@ -140,22 +135,12 @@ export function ProviderResourceTable({
     return <div className={styles.metricsCell}>{items}</div>;
   };
 
-  const renderStatus = (r: ProviderResource) => {
-    if (r.disabled) {
-      return (
-        <span className={`${styles.statusBadge} ${styles.statusDisabled}`}>
-          <IconAlertTriangle size={14} />
-          {t('providersPage.status.disabled')}
-        </span>
-      );
-    }
-    return (
-      <span className={`${styles.statusBadge} ${styles.statusActive}`}>
-        <IconCheckCircle2 size={14} />
-        {t('providersPage.status.active')}
-      </span>
+  const renderStatus = (r: ProviderResource) =>
+    r.disabled ? (
+      <StatusBadge tone="neutral">{t('providersPage.status.disabled')}</StatusBadge>
+    ) : (
+      <StatusBadge tone="success">{t('providersPage.status.active')}</StatusBadge>
     );
-  };
 
   const renderPrimary = (r: ProviderResource) => {
     if (isSponsorResource(r)) {

@@ -1,6 +1,8 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Card } from '@/components/ui/Card';
+import { PageHeader } from '@/components/ui/PageHeader';
+import { SearchInput } from '@/components/ui/SearchInput';
 import { Button } from '@/components/ui/Button';
 import { Modal } from '@/components/ui/Modal';
 import { ToggleSwitch } from '@/components/ui/ToggleSwitch';
@@ -103,11 +105,22 @@ export function SystemPage() {
   const versionTapCount = useRef(0);
   const versionTapTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
 
-  const otherLabel = useMemo(
-    () => (i18n.language?.toLowerCase().startsWith('zh') ? '其他' : 'Other'),
-    [i18n.language]
-  );
+  const [modelSearch, setModelSearch] = useState('');
+  const otherLabel = t('system_info.models_other');
   const groupedModels = useMemo(() => classifyModels(models, { otherLabel }), [models, otherLabel]);
+  // 模型动辄上百个：搜索时只保留匹配的模型，并丢掉变空的分组
+  const visibleGroups = useMemo(() => {
+    const query = modelSearch.trim().toLowerCase();
+    if (!query) return groupedModels;
+    return groupedModels
+      .map((group) => ({
+        ...group,
+        items: group.items.filter((model) =>
+          [model.name, model.alias].some((value) => value?.toLowerCase().includes(query))
+        ),
+      }))
+      .filter((group) => group.items.length > 0);
+  }, [groupedModels, modelSearch]);
   const requestLogEnabled = config?.requestLog ?? false;
   const requestLogDirty = requestLogDraft !== requestLogEnabled;
   const canEditRequestLog = auth.connectionStatus === 'connected' && Boolean(config);
@@ -295,7 +308,7 @@ export function SystemPage() {
 
   return (
     <div className={styles.container}>
-      <h1 className={styles.pageTitle}>{t('system_info.title')}</h1>
+      <PageHeader className={styles.pageHeader} title={t('system_info.title')} />
       <div className={styles.content}>
         <Card className={styles.aboutCard}>
           <div className={styles.aboutHeader}>
@@ -430,7 +443,16 @@ export function SystemPage() {
             <div className="hint">{t('system_info.models_empty')}</div>
           ) : (
             <div className="item-list">
-              {groupedModels.map((group) => {
+              <SearchInput
+                value={modelSearch}
+                onChange={setModelSearch}
+                label={t('system_info.models_search_label')}
+                placeholder={t('system_info.models_search_placeholder')}
+              />
+              {visibleGroups.length === 0 ? (
+                <div className="hint">{t('system_info.models_no_match')}</div>
+              ) : null}
+              {visibleGroups.map((group) => {
                 const iconSrc = getIconForCategory(group.id);
                 return (
                   <div key={group.id} className="item-row">

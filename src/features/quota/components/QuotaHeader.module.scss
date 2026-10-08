@@ -157,3 +157,14 @@
     animation: none;
   }
 }
+
+// 作为按钮时去掉浏览器默认样式，保持原有 meta 行外观，并显示为可点击
+button.metaAttention {
+  padding: 0;
+  border: 0;
+  background: none;
+  font: inherit;
+  cursor: pointer;
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
