@@ -4,11 +4,18 @@ import { apiClient, authFilesApi } from '@/services/api';
 import type { AuthFileRefreshResult } from '@/services/api/authFiles';
 import { getAuthFileRefreshKey } from '@/features/authFiles/manualRefresh';
 import { notifyAuthFilesChanged } from '@/features/authFiles/authFilesEvents';
-import { useNotificationStore } from '@/stores';
+import {
+  captureQuotaCacheGeneration,
+  commitIfQuotaCacheCurrent,
+  useNotificationStore,
+  useQuotaStore,
+} from '@/stores';
 import type { AuthFileItem } from '@/types';
 import { formatFileSize } from '@/utils/format';
 import { MAX_AUTH_FILE_SIZE } from '@/utils/constants';
 import { downloadBlob } from '@/utils/download';
+import { getStatusFromError } from '@/utils/quota';
+import { getQuotaCacheKey } from '@/utils/quota/identity';
 import {
   getTypeLabel,
   isProblemAuthFile,
@@ -16,6 +23,9 @@ import {
   normalizeProviderKey,
   supportsAuthFileManualRefresh,
 } from '@/features/authFiles/constants';
+import { resolveAuthFileQuotaType } from '@/features/authFiles/logic';
+import { getQuotaSetter, QUOTA_ADAPTERS } from '@/features/quota/providers';
+import { enrichQuotaInBackground } from '@/features/quota/quotaEnrichment';
 
 type DeleteAllOptions = {
   filter: string;
@@ -114,6 +124,54 @@ export function useAuthFilesData(options?: UseAuthFilesDataOptions): UseAuthFile
   useEffect(() => {
     onFilesMutatedRef.current = onFilesMutated;
   }, [onFilesMutated]);
+
+  const refreshQuotaAfterCooldownReset = useCallback(
+    async (item: AuthFileItem, connectionRevision: number) => {
+      const quotaType = resolveAuthFileQuotaType(item, 'all');
+      if (!quotaType) return;
+
+      const adapter = QUOTA_ADAPTERS[quotaType];
+      const cacheKey = getQuotaCacheKey(item);
+      const setQuota = getQuotaSetter(adapter);
+
+      // Expire any refresh that started before the cooldown mutation. Its response may contain
+      // the pre-reset usage and must not win the race with this request.
+      useQuotaStore.getState().clearQuotaCache([item.name]);
+      const cacheGeneration = captureQuotaCacheGeneration(item.name);
+      setQuota((prev) => ({
+        ...prev,
+        [cacheKey]: adapter.buildLoadingState(),
+      }));
+
+      try {
+        const data = await adapter.fetchQuota(item, t);
+        if (connectionRevision !== apiClient.getConnectionRevision()) return;
+        commitIfQuotaCacheCurrent(cacheGeneration, () => {
+          const successState = adapter.buildSuccessState(data);
+          setQuota((prev) => ({
+            ...prev,
+            [cacheKey]: successState,
+          }));
+          void enrichQuotaInBackground(adapter, item, data, successState, t);
+        });
+      } catch (err: unknown) {
+        if (connectionRevision !== apiClient.getConnectionRevision()) return;
+        const message = err instanceof Error ? err.message : t('common.unknown_error');
+        commitIfQuotaCacheCurrent(cacheGeneration, () => {
+          setQuota((prev) => ({
+            ...prev,
+            [cacheKey]: adapter.buildErrorState(message, getStatusFromError(err)),
+          }));
+          showNotification(
+            t('auth_files.quota_refresh_failed', { name: item.name, message }),
+            'error'
+          );
+        });
+      }
+    },
+    [showNotification, t]
+  );
+
   const selectionCount = selectedFiles.size;
   const toggleSelect = useCallback((name: string) => {
     setSelectedFiles((prev) => {
@@ -648,6 +706,7 @@ export function useAuthFilesData(options?: UseAuthFilesDataOptions): UseAuthFile
                   : file
               )
             );
+            await refreshQuotaAfterCooldownReset(item, connectionRevision);
             showNotification(
               t('auth_files.cooldown_reset_success', { name: item.name }),
               'success'
@@ -672,7 +731,14 @@ export function useAuthFilesData(options?: UseAuthFilesDataOptions): UseAuthFile
         },
       });
     },
-    [invalidateInFlightLoads, loadFiles, showConfirmation, showNotification, t]
+    [
+      invalidateInFlightLoads,
+      loadFiles,
+      refreshQuotaAfterCooldownReset,
+      showConfirmation,
+      showNotification,
+      t,
+    ]
   );
 
   const handleStatusToggle = useCallback(
